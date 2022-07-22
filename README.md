@@ -37,11 +37,14 @@ password: 123456
 The GraphQL Fullstack application can be accessed from this link.  
 https://gqlmsweb.susimsek.github.io
 
-<img src="https://github.com/susimsek/GraphqlMicroserviceFullstack/blob/main/images/ui-dashboard.png" alt="Graphql Fullstack Microservice App Dashboard" width="100%" height="100%"/>
+## Dashboard
+<img src="https://github.com/susimsek/GraphqlMicroserviceFullstack/blob/main/images/ui-dashboard.png" alt="Graphql Fullstack Microservice App Dashboard" width="100%" height="100%"/>   
 
-<img src="https://github.com/susimsek/GraphqlMicroserviceFullstack/blob/main/images/ui-product-page.png" alt="Graphql Fullstack Microservice App Product Page" width="100%" height="100%"/>
+## Product Page
+<img src="https://github.com/susimsek/GraphqlMicroserviceFullstack/blob/main/images/ui-product-page.png" alt="Graphql Fullstack Microservice App Product Page" width="100%" height="100%"/>  
 
-<img src="https://github.com/susimsek/GraphqlMicroserviceFullstack/blob/main/images/ui-login.png" alt="Graphql Fullstack Microservice App Login Page" width="100%" height="100%"/>
+## Login Page
+<img src="https://github.com/susimsek/GraphqlMicroserviceFullstack/blob/main/images/ui-login-page.png" alt="Graphql Fullstack Microservice App Login Page" width="100%" height="100%"/>
 
 # Development
 

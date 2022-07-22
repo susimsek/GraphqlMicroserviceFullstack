@@ -1,0 +1,21 @@
+server:
+  port: ${PORT:9000}
+
+spring:
+  cloud:
+    vault:
+      enabled: false
+    consul:
+      enabled: false
+  data:
+    mongodb:
+      uri: mongodb+srv://test_user123456:4hRsOKoJxkHswunQ@cluster0.nbzfi.mongodb.net/auth
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+
+auh-server:
+  provider:
+   issuer: http://localhost:9000

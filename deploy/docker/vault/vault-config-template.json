@@ -1,0 +1,27 @@
+{
+    "backend": {
+        "consul": {
+            "address": "${CONSUL}:8500",
+            "advertise_addr": "http://${CONSUL}:8300",
+            "path": "vault/",
+            "scheme": "http",
+            "token": "${TOKEN}"
+        }
+    },
+    "service_registration": {
+        "consul": {
+            "address": "${CONSUL}:8500",
+            "token": "${TOKEN}",
+            "service": "vault"
+        }
+    },
+    "listener": {
+        "tcp": {
+            "address": "0.0.0.0:8200",
+            "tls_disable": 1
+        }
+    },
+    "api_addr": "http://vault:8200",
+    "ui": true,
+    "disable_mlock": true
+}

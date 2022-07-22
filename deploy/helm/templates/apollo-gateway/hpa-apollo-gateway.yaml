@@ -1,0 +1,28 @@
+{{- if .Values.apolloGateway.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: apollo-gateway
+  labels:
+  {{- include "apollo-gateway.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: apollo-gateway
+  minReplicas: {{ .Values.apolloGateway.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.apolloGateway.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.apolloGateway.autoscaling.targetCPU }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.apolloGateway.autoscaling.targetCPU }}
+    {{- end }}
+    {{- if .Values.apolloGateway.autoscaling.targetMemory }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.apolloGateway.autoscaling.targetMemory  }}
+  {{- end }}
+  {{- end }}

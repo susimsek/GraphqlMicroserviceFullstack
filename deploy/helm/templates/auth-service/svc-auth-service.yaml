@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  labels:
+  {{- include "auth-service.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.authService.service.type }}
+  {{- if and (eq .Values.authService.service.type "LoadBalancer") .Values.authService.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.authService.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.authService.service.type "ClusterIP") .Values.authService.service.clusterIP }}
+  clusterIP: {{ .Values.authService.service.clusterIP }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.authService.service.port }}
+      targetPort: http
+      {{- if and (or (eq .Values.authService.service.type "NodePort") (eq .Values.authService.service.type "LoadBalancer")) .Values.authService.service.nodePort }}
+      nodePort: {{ .Values.authService.service.nodePort }}
+      {{- else if eq .Values.authService.service.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
+      name: http
+  selector:
+  {{- include "auth-service.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apollo-gateway-configmap
+  labels:
+  {{- include "apollo-gateway.labels" . | nindent 4 }}
+data:
+  {{- if .Values.apolloGateway.environment }}
+  {{- range $key, $val := .Values.apolloGateway.environment }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}
+  {{- end }}
+  SPRING_PROFILES_ACTIVE: prod
+  CONSUL_HOST: consul-server
+  CONSUL_PORT: '8500'
+  VAULT_URI: http://vault:8200
+  VAULT_AUTHENTICATION: KUBERNETES
+  KUBERNETES_ROLE: internal-app

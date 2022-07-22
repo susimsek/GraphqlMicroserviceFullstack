@@ -1,0 +1,17 @@
+server:
+  shutdown: graceful
+  port: ${PORT:8080}
+
+spring:
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb+srv://test_user123456:4hRsOKoJxkHswunQ@cluster0.nbzfi.mongodb.net/auth}
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+
+auth-server:
+  provider:
+    issuer: ${AUTH-SERVER_PROVIDER_ISSUER:http://auth-service:8080}

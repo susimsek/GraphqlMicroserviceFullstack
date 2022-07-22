@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apollo-gateway
+  labels:
+    {{- include "apollo-gateway.labels" . | nindent 4 }}
+    version: v1
+spec:
+  selector:
+    matchLabels:
+      {{- include "apollo-gateway.selectorLabels" . | nindent 6 }}
+      version: v1
+  {{- if .Values.global.updateStrategy }}
+  {{- if not .Values.apolloGateway.autoscaling.enabled }}
+  replicas: {{ .Values.apolloGateway.replicaCount }}
+  {{- end }}
+  strategy: {{- toYaml .Values.global.updateStrategy | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/apollo-gateway/config-apollo-gateway.yaml") . | sha256sum }}
+      labels:
+        {{- include "apollo-gateway.selectorLabels" . | nindent 8 }}
+        version: v1
+    spec:
+      serviceAccountName: {{ template "app.serviceAccountName" . }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - apollo-gateway
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml .Values.global.imagePullSecrets | nindent 4 }}
+      {{- end }}
+      containers:
+        {{- if .Values.apolloGateway.extraSideContainers }}
+        {{ tpl .Values.apolloGateway.extraSideContainers . | indent 8 }}
+        {{- end }}
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.apolloGateway.image.repository }}:{{ .Values.apolloGateway.image.tag }}"
+          imagePullPolicy: {{ .Values.apolloGateway.image.pullPolicy }}
+          {{- if .Values.apolloGateway.command }}
+          command:
+          {{ tpl .Values.apolloGateway.command . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.apolloGateway.containerPorts.http }}
+          {{- if .Values.apolloGateway.livenessProbe.enabled }}
+          livenessProbe: {{- omit .Values.apolloGateway.livenessProbe "enabled" | toYaml | nindent 12 }}
+          {{- else if .Values.apolloGateway.customLivenessProbe }}
+          livenessProbe: {{- toYaml .Values.apolloGateway.customLivenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.apolloGateway.readinessProbe.enabled }}
+          readinessProbe: {{- omit .Values.apolloGateway.readinessProbe "enabled" | toYaml | nindent 12 }}
+          {{- else if .Values.apolloGateway.customReadinessProbe }}
+          readinessProbe: {{- toYaml .Values.apolloGateway.customReadinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.apolloGateway.resources }}
+          resources: {{- toYaml .Values.apolloGateway.resources | nindent 12 }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: apollo-gateway-configmap
+          volumeMounts:
+          {{- if .Values.apolloGateway.extraVolumeMounts }}
+          {{- toYaml .Values.apolloGateway.extraVolumeMounts | nindent 12 }}
+      {{- end }}
+      {{- if .Values.apolloGateway.extraInitContainers }}
+      initContainers:
+      {{ tpl .Values.apolloGateway.extraInitContainers . | indent 8 }}
+      {{- end }}
+      {{- if .Values.apolloGateway.extraVolumes }}
+      volumes:
+      {{- if .Values.apolloGateway.extraVolumes }}
+      {{- toYaml .Values.apolloGateway.extraVolumes | nindent 8 }}
+  {{- end }}
+  {{- end }}

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apollo-gateway
+  labels:
+  {{- include "apollo-gateway.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.apolloGateway.service.type }}
+  {{- if and (eq .Values.apolloGateway.service.type "LoadBalancer") .Values.apolloGateway.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.apolloGateway.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.apolloGateway.service.type "ClusterIP") .Values.apolloGateway.service.clusterIP }}
+  clusterIP: {{ .Values.apolloGateway.service.clusterIP }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.apolloGateway.service.port }}
+      targetPort: http
+      {{- if and (or (eq .Values.apolloGateway.service.type "NodePort") (eq .Values.apolloGateway.service.type "LoadBalancer")) .Values.apolloGateway.service.nodePort }}
+      nodePort: {{ .Values.apolloGateway.service.nodePort }}
+      {{- else if eq .Values.apolloGateway.service.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
+      name: http
+  selector:
+  {{- include "apollo-gateway.selectorLabels" . | nindent 4 }}

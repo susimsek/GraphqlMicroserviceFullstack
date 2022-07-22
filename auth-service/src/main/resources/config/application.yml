@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: auth-service
+  profiles:
+    active: local
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        instance-id: ${spring.application.name}:${random.value}
+        prefer-ip-address: true
+        acl-token: 1dc477e6-422b-33aa-4cc7-140e4386d030
+  security:
+    oauth2:
+      client:
+        registration:
+          google-idp:
+            provider: google
+            client-id: ${GOOGLE_CLIENT_ID:10959265505-a56ge3f9j1p4p0gf3brntbfu3r1sa58t.apps.googleusercontent.com}
+            client-secret: ${GOOGLE_CLIENT_SECRET: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}
+            scope: openid, https://www.googleapis.com/auth/userinfo.profile, https://www.googleapis.com/auth/userinfo.email
+            client-name: Sign in with Google
+        provider:
+          google:
+            user-name-attribute: email
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
+jwk-set:
+  key-store: classpath:jwk-set.pfx
+  key-store-password: password
+cors:
+  allowed-origins: ${CORS_ALLOWED-ORIGINS:http://localhost:3000, http://127.0.0.1:3000}
+  allowed-methods: GET, PUT, POST, PATCH, DELETE, OPTIONS
+  allowed-headers: Origin, Accept, X-Requested-With, Authorization, Cache-Control, Content-Type
+  exposed-headers: Location
+  allow-credentials: true
+  max-age: 3600
+
+server:
+  forward-headers-strategy: framework
+
+---
+spring:
+  config:
+    activate:
+      on-profile: '!local'
+    import: vault://
+  cloud:
+    vault:
+      authentication: APPROLE # TOKEN
+      app-role:
+        role-id: b6c35726-4ae4-7eed-8144-c23195a87e1d
+        secret-id: 5f592301-ff49-0023-0bec-320c06a3bd7c
+        role: pres-read
+        app-role-path: approle
+      kv:
+        enabled: true
+        backend: secret
+      uri: http://localhost:8200

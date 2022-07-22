@@ -10,7 +10,7 @@ npm-debug.log
 yarn-error.log
 src/**/*.{js,jsx}
 tests/**/*.{js,jsx}
-/index.js
+/gateway.js
 /react-jhipster.{js,jsx}
 config/testing-utils.js
 *.map

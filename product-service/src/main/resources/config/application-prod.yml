@@ -1,0 +1,18 @@
+server:
+  shutdown: graceful
+  port: ${PORT:8080}
+
+spring:
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb+srv://test_user123456:4hRsOKoJxkHswunQ@cluster0.nbzfi.mongodb.net/demo}
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI:http://localhost:9000}

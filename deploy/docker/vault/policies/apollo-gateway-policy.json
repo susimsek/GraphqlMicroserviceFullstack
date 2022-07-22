@@ -1,0 +1,9 @@
+{
+  "path": {
+    "secret/apollo-gateway*": {
+      "capabilities": [
+        "create", "read", "update", "delete", "list"
+      ]
+    }
+  }
+}

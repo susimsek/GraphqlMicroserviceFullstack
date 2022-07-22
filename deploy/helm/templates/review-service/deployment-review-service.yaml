@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-service
+  labels:
+    {{- include "review-service.labels" . | nindent 4 }}
+    version: v1
+spec:
+  selector:
+    matchLabels:
+      {{- include "review-service.selectorLabels" . | nindent 6 }}
+      version: v1
+  {{- if .Values.global.updateStrategy }}
+  {{- if not .Values.reviewService.autoscaling.enabled }}
+  replicas: {{ .Values.reviewService.replicaCount }}
+  {{- end }}
+  strategy: {{- toYaml .Values.global.updateStrategy | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/review-service/config-review-service.yaml") . | sha256sum }}
+      labels:
+        {{- include "review-service.selectorLabels" . | nindent 8 }}
+        version: v1
+    spec:
+      serviceAccountName: {{ template "app.serviceAccountName" . }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - review-service
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml .Values.global.imagePullSecrets | nindent 4 }}
+      {{- end }}
+      containers:
+        {{- if .Values.reviewService.extraSideContainers }}
+        {{ tpl .Values.reviewService.extraSideContainers . | indent 8 }}
+        {{- end }}
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.reviewService.image.repository }}:{{ .Values.reviewService.image.tag }}"
+          imagePullPolicy: {{ .Values.reviewService.image.pullPolicy }}
+          {{- if .Values.reviewService.command }}
+          command:
+          {{ tpl .Values.reviewService.command . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.reviewService.containerPorts.http }}
+          {{- if .Values.reviewService.livenessProbe.enabled }}
+          livenessProbe: {{- omit .Values.reviewService.livenessProbe "enabled" | toYaml | nindent 12 }}
+          {{- else if .Values.reviewService.customLivenessProbe }}
+          livenessProbe: {{- toYaml .Values.reviewService.customLivenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.reviewService.readinessProbe.enabled }}
+          readinessProbe: {{- omit .Values.reviewService.readinessProbe "enabled" | toYaml | nindent 12 }}
+          {{- else if .Values.reviewService.customReadinessProbe }}
+          readinessProbe: {{- toYaml .Values.reviewService.customReadinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.reviewService.resources }}
+          resources: {{- toYaml .Values.reviewService.resources | nindent 12 }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: review-service-configmap
+          volumeMounts:
+          {{- if .Values.reviewService.extraVolumeMounts }}
+          {{- toYaml .Values.reviewService.extraVolumeMounts | nindent 12 }}
+      {{- end }}
+      {{- if .Values.reviewService.extraInitContainers }}
+      initContainers:
+      {{ tpl .Values.reviewService.extraInitContainers . | indent 8 }}
+      {{- end }}
+      {{- if .Values.reviewService.extraVolumes }}
+      volumes:
+      {{- if .Values.reviewService.extraVolumes }}
+      {{- toYaml .Values.reviewService.extraVolumes | nindent 8 }}
+  {{- end }}
+  {{- end }}

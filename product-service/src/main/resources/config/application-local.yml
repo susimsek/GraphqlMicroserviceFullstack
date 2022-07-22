@@ -1,0 +1,22 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  cloud:
+    vault:
+      enabled: false
+    consul:
+      enabled: false
+  data:
+    mongodb:
+      uri: mongodb+srv://test_user123456:4hRsOKoJxkHswunQ@cluster0.nbzfi.mongodb.net/demo
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+  security:
+    oauth2:
+     resource-server:
+       jwt:
+         issuer-uri: http://localhost:9000

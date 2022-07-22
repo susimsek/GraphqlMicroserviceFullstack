@@ -1,0 +1,182 @@
+version: '3.8'
+
+volumes:
+  mongodb:
+  vault:
+  consul:
+
+networks:
+  backend:
+  frontend:
+
+services:
+  mongodb:
+    image: mongo:5.0
+    restart: unless-stopped
+    container_name: mongodb
+    networks:
+      - backend
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=g44bsljDAi5nbWjf
+    volumes:
+      - ./mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+      - mongodb:/data/db
+    ports:
+      - "27018:27017"
+
+  vault:
+    image: vault:latest
+    restart: unless-stopped
+    container_name: vault
+    entrypoint: "vault server -config=/config/vault-config.json"
+    cap_add:
+      - IPC_LOCK
+    depends_on:
+      - consul
+    networks:
+      - backend
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./vault/config:/config
+      - ./vault/policies:/policies
+      - vault:/vault/data
+
+  consul:
+    image: consul:latest
+    restart: unless-stopped
+    container_name: consul
+    networks:
+      - backend
+    command: "agent -server -bind=0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 -config-file=/consul/config/config.json"
+    ports:
+      - "8300:8300"
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+    volumes:
+      - ./consul/config/consul-config.json:/consul/config/config.json
+      - ./consul/config/consul-acl.json:/consul/config/consul-acl.json
+      - consul:/consul/data
+
+  apollo-gateway:
+    image: suayb/apollo-gateway:latest
+    restart: unless-stopped
+    container_name: apollo-gateway
+    depends_on:
+      - consul
+      - vault
+    networks:
+      - backend
+    environment:
+      - VAULT_URI=http://vault:8200
+      - VAULT_APP_ROLE_ROLE_ID=${APOLLO_GATEWAY_APP_ROLE_ROLE_ID}
+      - VAULT_APP_ROLE_SECRET_ID=${APOLLO_GATEWAY_APP_ROLE_SECRET_ID}
+      - VAULT_AUTHENTICATION=APPROLE
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - CONSUL_ACL_TOKEN=${CONSUL_ACL_TOKEN}
+    ports:
+      - "4000:4000"
+
+  auth-service:
+    image: suayb/auth-service:latest
+    restart: unless-stopped
+    container_name: auth-service
+    depends_on:
+      - mongodb
+      - vault
+      - consul
+    networks:
+      - backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_CLOUD_CONSUL_DISCOVERY_ACL_TOKEN=${CONSUL_ACL_TOKEN}
+      - SPRING_CLOUD_VAULT_URI=http://vault:8200
+      - SPRING_CLOUD_VAULT_AUTHENTICATION=APPROLE
+      - SPRING_CLOUD_VAULT_APP_ROLE_ROLE_ID=${AUTH_APP_ROLE_ROLE_ID}
+      - SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID=${AUTH_APP_ROLE_SECRET_ID}
+    ports:
+      - "9000:9000"
+
+
+  product-service:
+    image: suayb/product-service:latest
+    restart: unless-stopped
+    container_name: product-service
+    depends_on:
+      - mongodb
+      - vault
+      - consul
+      - auth-service
+    networks:
+      - backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_CLOUD_CONSUL_DISCOVERY_ACL_TOKEN=${CONSUL_ACL_TOKEN}
+      - SPRING_CLOUD_VAULT_URI=http://vault:8200
+      - SPRING_CLOUD_VAULT_AUTHENTICATION=APPROLE
+      - SPRING_CLOUD_VAULT_APP_ROLE_ROLE_ID=${PRODUCT_APP_ROLE_ROLE_ID}
+      - SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID=${PRODUCT_APP_ROLE_SECRET_ID}
+    ports:
+      - "8081:8081"
+
+  review-service:
+    image: suayb/review-service:latest
+    restart: unless-stopped
+    container_name: review-service
+    depends_on:
+      - mongodb
+      - vault
+      - consul
+      - auth-service
+    networks:
+      - backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_CLOUD_CONSUL_DISCOVERY_ACL_TOKEN=${CONSUL_ACL_TOKEN}
+      - SPRING_CLOUD_VAULT_URI=http://vault:8200
+      - SPRING_CLOUD_VAULT_AUTHENTICATION=APPROLE
+      - SPRING_CLOUD_VAULT_APP_ROLE_ROLE_ID=${REVIEW_APP_ROLE_ROLE_ID}
+      - SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID=${REVIEW_APP_ROLE_SECRET_ID}
+    ports:
+      - "8082:8082"
+
+  web:
+    image: suayb/graphql-web:latest
+    restart: unless-stopped
+    container_name: web
+    networks:
+      - frontend
+    environment:
+      - PORT=3000
+      - AUTH_SERVER_URL=http://localhost:9000
+      - OAUTH2_CLIENT_ID=web-client
+      - OAUTH2_CLIENT_SECRET=123456
+    ports:
+      - '3000:3000'
+
+  nginx:
+    image: nginx:1.18-alpine
+    container_name: nginx
+    restart: unless-stopped
+    networks:
+      - backend
+      - frontend
+    links:
+      - apollo-gateway
+      - web
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - '80:80'

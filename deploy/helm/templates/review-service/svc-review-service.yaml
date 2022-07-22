@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-service
+  labels:
+  {{- include "review-service.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.reviewService.service.type }}
+  {{- if and (eq .Values.reviewService.service.type "LoadBalancer") .Values.reviewService.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.reviewService.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.reviewService.service.type "ClusterIP") .Values.reviewService.service.clusterIP }}
+  clusterIP: {{ .Values.reviewService.service.clusterIP }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.reviewService.service.port }}
+      targetPort: http
+      {{- if and (or (eq .Values.reviewService.service.type "NodePort") (eq .Values.reviewService.service.type "LoadBalancer")) .Values.reviewService.service.nodePort }}
+      nodePort: {{ .Values.reviewService.service.nodePort }}
+      {{- else if eq .Values.reviewService.service.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
+      name: http
+  selector:
+  {{- include "review-service.selectorLabels" . | nindent 4 }}

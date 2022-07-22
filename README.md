@@ -1,4 +1,4 @@
-# Graphql Fullstack Microservice App With OAuth2 Auth Using Spring Boot & React
+# Graphql Fullstack Microservice Application With OAuth2 Authentication Using Spring Boot & React
 
 Graphql Fullstack Microservice Application With OAuth2
 

@@ -175,10 +175,10 @@ following bash command
  ./deploy.sh -u
 ```
 
-The Fullstack GraphQL App be accessed with ingress from the link below.  
+The Fullstack GraphQL App be accessed with ingress from the link below.(default nginx ingress)  
 https://gqlmsweb.susimsek.github.io
 
-The OAuth2 Authorization Server be accessed with ingress from the link below.  
+The OAuth2 Authorization Server be accessed with ingress from the link below. (default nginx ingress)  
 https://auth.susimsek.github.io
 
 # Used Technologies

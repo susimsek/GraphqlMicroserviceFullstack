@@ -104,6 +104,34 @@ You can run the react app(accessible on http://127.0.0.1:3000) by typing the fol
 npm start
 ```
 
+# Sonar
+
+## Code Quality For Backend
+
+You can test code quality locally via sonarqube by typing the following command
+
+```sh
+mvn -Psonar compile initialize sonar:sonar
+```
+
+## Code Quality For Apollo Gateway
+
+You can test code quality locally via sonarqube by typing the following command
+
+```sh
+npm run sonar
+```
+
+## Code Quality For Frontend
+
+You can test code quality locally via sonarqube by typing the following command
+
+```sh
+npm run sonar
+```
+
+Once the analysis completes, it will be available on the Sonar dashboard, which by default is available on http://localhost:9000.
+
 # Docker
 
 You can also fully dockerize your application and all the services that it depends on. To achieve this, first build a docker image of your app.
@@ -189,6 +217,7 @@ https://auth.susimsek.github.io
 * Docker Compose
 * Kubernetes
 * Helm
+* Sonarqube
 * Vault
 * Consul
 * Nginx

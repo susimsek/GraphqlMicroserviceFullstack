@@ -153,7 +153,7 @@ class AuthorizationServerConfig(
             val keyStorePassword = jwkSetProperties.keyStorePassword
             val keyStore = KeyStore.getInstance("pkcs12")
             keyStore.load(ksFile.inputStream, keyStorePassword.toCharArray())
-            JWKSet.load(keyStore) { name: String? -> keyStorePassword.toCharArray() }
+            JWKSet.load(keyStore) { keyStorePassword.toCharArray() }
         } catch (ex: Exception) {
             throw IllegalStateException(ex)
         }

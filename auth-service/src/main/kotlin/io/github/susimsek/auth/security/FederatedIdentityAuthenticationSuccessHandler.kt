@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse
 
 class FederatedIdentityAuthenticationSuccessHandler : AuthenticationSuccessHandler {
     private val delegate: AuthenticationSuccessHandler = SavedRequestAwareAuthenticationSuccessHandler()
-    private var oauth2UserHandler = BiConsumer { registrationId: String, user: OAuth2User -> }
+    private var oauth2UserHandler = BiConsumer { _: String, _: OAuth2User -> }
     private var oidcUserHandler = BiConsumer { registrationId: String, user: OidcUser -> oauth2UserHandler.accept(registrationId, user) }
     @Throws(IOException::class, ServletException::class)
     override fun onAuthenticationSuccess(

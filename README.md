@@ -83,7 +83,7 @@ npm install
 You can run the apollo gateway(accessible on http://127.0.0.1:4000) by typing the following command
 
 ```sh
-npm run dev
+npm run start:dev
 ```
 
 ## Prerequisites for Frontend
@@ -191,6 +191,7 @@ https://auth.susimsek.github.io
 * Helm
 * Vault
 * Consul
+* Nginx
 * Mongodb
 * Apollo Gateway
 * Spring Boot

@@ -24,21 +24,13 @@ class ReactiveGraphqlExceptionResolver : DataFetcherExceptionResolver {
                 Mono.just(listOf(error))
             }
 
-            is ResourceAlreadyExistsException -> {
-                val error = GraphqlErrorBuilder.newError(env)
-                    .message(ex.message).errorType(ErrorType.BAD_REQUEST).build()
-                Mono.just(listOf(error))
-            }
+            is ResourceAlreadyExistsException  -> badRequestException(ex, env)
 
-            is ValidationException -> {
-                val error = GraphqlErrorBuilder.newError(env)
-                    .message(ex.message).errorType(ErrorType.BAD_REQUEST).build()
-                Mono.just(listOf(error))
-            }
+            is ValidationException -> badRequestException(ex, env)
 
             is ConstraintViolationException -> {
                 val errors = ex.constraintViolations.map { FieldError(
-                    property = it.propertyPath.reduce{first, second -> second}.toString(),
+                    property = it.propertyPath.reduce{_, second -> second}.toString(),
                     message = it.message
                 ) }
 
@@ -53,5 +45,11 @@ class ReactiveGraphqlExceptionResolver : DataFetcherExceptionResolver {
                 Mono.empty()
             }
         }
+    }
+
+    private fun badRequestException(ex: Throwable, env: DataFetchingEnvironment): Mono<List<GraphQLError>> {
+        val error = GraphqlErrorBuilder.newError(env)
+            .message(ex.message).errorType(ErrorType.BAD_REQUEST).build()
+        return Mono.just(listOf(error))
     }
 }

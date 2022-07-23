@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Container, Row, Spinner, Table} from "react-bootstrap";
+import {Card, Container, Row, Spinner} from "react-bootstrap";
 import {useAllProductsQuery} from "../../generated/graphql-types";
 import {Link} from "react-router-dom";
 

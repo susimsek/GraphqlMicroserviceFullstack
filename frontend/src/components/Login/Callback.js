@@ -8,6 +8,7 @@ import {
 import {Container, Spinner} from "react-bootstrap";
 import {useNavigate} from "react-router";
 import {useAuthContext} from "./AuthTokenProvider";
+import {useSearchParams} from "react-router-dom";
 
 const signInErrorText = 'Sorry, we were unable to sign you in. Please try again later.'
 
@@ -16,6 +17,7 @@ const Callback = () => {
     const [, updateAuthInfo] = useAuthContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const [, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         processAuth()
@@ -35,9 +37,11 @@ const Callback = () => {
                     const response = await tradeCodeForToken(code)
                     updateAuthInfo(response)
                     setLoading(false)
+                    setSearchParams({})
                     navigate('/')
                 } catch (err) {
                     setLoading(false)
+                    setSearchParams({})
                     navigate('/login', {
                         state: {
                             error: signInErrorText

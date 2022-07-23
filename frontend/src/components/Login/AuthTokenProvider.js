@@ -8,8 +8,12 @@ const AuthContext = React.createContext({
         accessTokenExpiry: null,
         idToken: null
     },
-    updateAuthInfo() {},
-    isLoggedIn() {}
+    updateAuthInfo: () => {
+        // This is intentional
+    },
+    isLoggedIn: () => {
+        // This is intentional
+    }
 });
 
 type AuthContextProviderProps = {

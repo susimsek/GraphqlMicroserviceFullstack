@@ -26,7 +26,7 @@ export const createApolloClient = () => {
     const errorLink = onError(({ networkError, graphQLErrors, operation, forward }) => {
         if (graphQLErrors) {
             graphQLErrors.forEach(({ extensions: { code , serviceName }, message, path }) => {
-                if (code === 'UNAUTHENTICATED') {
+                if (code == 'UNAUTHENTICATED') {
                     logout();
                     window.location.reload();
                 }

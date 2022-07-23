@@ -1,5 +1,5 @@
 import React from 'react';
-import {Badge, Card, Container, ListGroup, Nav, Row, Spinner} from "react-bootstrap";
+import {Badge, Card, Container, ListGroup, Row, Spinner} from "react-bootstrap";
 import {useProductAndReviewsQuery} from "../../generated/graphql-types";
 import {useParams} from "react-router";
 import StarRating from "./StarRating";

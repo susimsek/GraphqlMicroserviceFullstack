@@ -3,6 +3,7 @@ import sha256 from 'crypto-js/sha256';
 import Base64 from 'crypto-js/enc-base64';
 import {authorizeApiUri, tokenApiUri} from "../constants/url";
 import {getAccessToken} from "../api/apiCalls";
+import {Buffer} from 'buffer';
 import {
     accessTokenExpiryKey, accessTokenKey,
     authCodeNonceKey,
@@ -23,24 +24,16 @@ export const isLoggedIn = () => {
 }
 
 export const tradeCodeForToken = async (code) => {
-    return await getToken(
+    return getToken(
         tokenApiUri,
         '/callback',
-        scope,
-        usePkce,
-        useState,
-        useNonce,
         code
     )
 }
 
 const getToken = async (tokenUrl,
-                         callBackPath,
-                         scope,
-                         usePkce,
-                         useState,
-                         useNonce,
-                         code) => {
+                        callBackPath,
+                        code) => {
     try {
         if (useState) {
             const codeState = getURIParameterByName(
@@ -124,20 +117,13 @@ export const setTokens = (response) => {
 
 export const doAuthorizationCodeFlow = () => {
     const codeLocation = getAuthorizeUri(
-        authorizeApiUri, '/callback',
-        clientId, scope,
-        usePkce, useState, useNonce)
+        authorizeApiUri, '/callback')
     window.location.replace(codeLocation)
 }
 
 export const getAuthorizeUri = (
     authUrl,
-    callBackPath,
-    clientId,
-    scope,
-    usePkce,
-    useState,
-    useNonce
+    callBackPath
 ) => {
     let url = authUrl
     url += '?client_id=' + clientId
@@ -228,11 +214,12 @@ export const getURIParameterByName = (name, url) => {
     return decodeURIComponent(results[2].replace(/\+/g, ' '))
 }
 
-export const parseJwt = (token: string) => {
+export const parseJwt = (token) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const buff = Buffer.from(base64, 'base64');
     return decodeURIComponent(
-        atob(base64)
+        buff.toString('utf-8')
             .split('')
             .map(function (c) {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
@@ -254,8 +241,8 @@ export const hasAccessToken = () => {
 }
 
 export const hasTokenExpired = () => {
-    let tokenExpired: boolean = false
-    const accessTokenExpiry: any = localStorage.getItem(accessTokenExpiryKey)
+    let tokenExpired = false
+    const accessTokenExpiry = localStorage.getItem(accessTokenExpiryKey)
     if (accessTokenExpiry) {
         const now = new Date();
         const accessTokenExpiryDate = new Date(accessTokenExpiry)
@@ -270,11 +257,4 @@ export const logout = () => {
     localStorage.removeItem(accessTokenKey)
     localStorage.removeItem(accessTokenExpiryKey)
     localStorage.removeItem(idTokenKey)
-}
-
-
-export class doLogoutFlow {
-}
-
-export class removeTokens {
 }

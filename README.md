@@ -29,7 +29,7 @@ You can log in to the authorization server using that credential information or 
 
 ```sh
 username: admin
-password: 123456
+password: password
 ```
 
 # Application

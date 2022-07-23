@@ -19,7 +19,7 @@ const secretId = process.env.VAULT_APP_ROLE_SECRET_ID;
 
 const kubernetesRole = process.env.KUBERNETES_ROLE;
 const vaultAuthentication = process.env.VAULT_AUTHENTICATION;
-const serviceAccountToken = KUBERNETES_SERVICE_ACCOUNT_TOKEN_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/token";
+const serviceAccountToken =  process.env.KUBERNETES_SERVICE_ACCOUNT_TOKEN_FILE || '/var/run/secrets/kubernetes.io/serviceaccount/token';
 
 const initConfig = async () => {
     let config;

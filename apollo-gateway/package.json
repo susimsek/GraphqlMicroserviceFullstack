@@ -12,13 +12,15 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "latest"
+    "nodemon": "latest",
+    "sonarqube-scanner": "^2.8.1"
   },
   "keywords": [],
   "license": "MIT",
-  "main": "gateway.js",
+  "main": "src/gateway.js",
   "scripts": {
-    "start:dev": "NODE_ENV=development node gateway.js",
-    "start:prod": "NODE_ENV=production node gateway.js"
+    "start:dev": "NODE_ENV=development node src/gateway.js",
+    "start:prod": "NODE_ENV=production node src/gateway.js",
+    "sonar": "node sonarqube-scanner.js"
   }
 }

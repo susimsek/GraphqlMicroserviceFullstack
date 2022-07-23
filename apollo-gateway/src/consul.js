@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const ip = require("ip");
 let consulClient;
 let serviceId;
-initConsul = () => {
+const initConsul = () => {
     const Consul = require('consul');
     consulClient =  new Consul({
         host: consulHost,
@@ -42,7 +42,7 @@ const registerService = (config) => {
 }
 
 const unregisterService = async (err) => {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
         if (err) reject(err);
         consulClient.agent.service.deregister(serviceId, () => {
             resolve(serviceId)
@@ -51,7 +51,7 @@ const unregisterService = async (err) => {
 };
 
 const getServiceList = (callback) => {
-    consulClient.agent.service.list(callback);
+    return consulClient.agent.service.list(callback);
 }
 
 module.exports.initConsul = initConsul;

@@ -16,18 +16,14 @@ initConfig().then(config => {
         startGateway(config, servers)
     } else {
         initConsul()
-        getServiceList(function(err, services) {
+        getServiceList((err, services) => {
             if (err) throw err;
-            Object.keys(services).filter(id => {
-                if (services[id].Tags.indexOf('graphql') > -1) {
-                    servers.push(
-                        { name: services[id].Service.replaceAll('-service', ''), url: `http://${services[id].Address}:${services[id].Port}/graphql` }
-                    )
-                }
-            });
-            if (servers.length > 0) {
-                startGateway(config, servers)
-            }
+            servers = Object.keys(services)
+                .filter(id => (services[id].Tags.indexOf('graphql') > -1))
+                .map(id => {
+                    return { name: services[id].Service.replaceAll('-service', ''), url: `http://${services[id].Address}:${services[id].Port}/graphql` }
+                });
+            startGateway(config, servers)
         });
     }
 }).catch(err => {
@@ -40,7 +36,7 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
     }
 }
 
-startGateway = (config, servers) => {
+const startGateway = (config, servers) => {
     const corsOptions = {
         origin: config.CORS_ALLOWED_ORIGINS.split(", "),
         credentials: config.CORS_ALLOW_CREDENTIALS

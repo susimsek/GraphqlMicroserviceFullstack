@@ -1,19 +1,16 @@
-const aclToken = process.env.CONSUL_ACL_TOKEN || '';
-const consulHost = process.env.CONSUL_HOST || 'localhost';
-const consulPort = process.env.CONSUL_PORT || 8500;
 const { v4: uuidv4 } = require('uuid');
 const ip = require("ip");
 let consulClient;
 let serviceId;
-const initConsul = () => {
+const initConsul = (config) => {
     const Consul = require('consul');
     consulClient =  new Consul({
-        host: consulHost,
-        port: consulPort,
+        host: config.CONSUL_HOST,
+        port: config.CONSUL_PORT,
         secure: false,
         promisify: true,
         defaults: {
-            token: aclToken
+            token: config.ACL_TOKEN
         }
     });
 }

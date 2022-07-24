@@ -1,7 +1,7 @@
 #!/bin/sh
 alias vault="kubectl -n demo exec -i  vault-0 -- vault"
 namespace=$1
-
+suffix=$2
 kubectl -n ${namespace} exec vault-0 -- vault operator init -key-shares=1 -key-threshold=1 -format=json > ./deploy/${suffix}/cluster-keys.json
       VAULT_UNSEAL_KEY=$(cat ./deploy/${suffix}/cluster-keys.json | jq -r ".unseal_keys_b64[]")
       INITIAL_ROOT_TOKEN=$(cat ./deploy/${suffix}/cluster-keys.json | jq -r ".root_token")
@@ -13,13 +13,13 @@ kubectl -n ${namespace} exec vault-0 -- vault operator init -key-shares=1 -key-t
       done
 
       vault login $INITIAL_ROOT_TOKEN
-      vault secrets enable -path=secret kv-v2
+      vault secrets enable -path=secret/ kv
 
-      vault kv put secret/application/prod SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://auth-service:9000
+      vault kv put secret/application/prod SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://auth-service:9000 SPRING_CLOUD_CONSUL_HOST=consul-server SPRING_CLOUD_CONSUL_PORT=8500
       vault kv put secret/auth-service/prod PORT=9000 AUTH-SERVER_PROVIDER_ISSUER=http://auth-service:9000 CORS_ALLOWED-ORIGINS='http://localhost:3000, http://127.0.0.1:3000, http://gqlmsweb.susimsek.github.io, https://gqlmsweb.susimsek.github.io' SPRING_DATA_MONGODB_URI=mongodb://auth-admin:iXCjXb7e2yjJbjRa@mongodb:27017/auth GOOGLE_CLIENT_ID=10959265505-a56ge3f9j1p4p0gf3brntbfu3r1sa58t.apps.googleusercontent.com GOOGLE_CLIENT_SECRET=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
       vault kv put secret/product-service/prod PORT=8081 SPRING_DATA_MONGODB_URI=mongodb://product-admin:iXCjXb7e2yjJbjRp@mongodb:27017/product
       vault kv put secret/review-service/prod PORT=8082 SPRING_DATA_MONGODB_URI=mongodb://review-admin:iXCjXb7e2yjJbjRr@mongodb:27017/review
-      vault kv put secret/apollo-gateway/production PORT=4000 CORS_ALLOWED_ORIGINS='http://localhost:3000, http://127.0.0.1:3000, https://studio.apollographql.com'
+      vault kv put secret/apollo-gateway/production PORT=4000 CORS_ALLOWED_ORIGINS='http://localhost:3000, http://127.0.0.1:3000, https://studio.apollographql.com' CONSUL_HOST=consul-server CONSUL_PORT=8500
 
       vault auth enable kubernetes
 
@@ -29,23 +29,23 @@ kubectl -n ${namespace} exec vault-0 -- vault operator init -key-shares=1 -key-t
                                                         kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
                                                         issuer="https://kubernetes.default.svc.cluster.local"'
       vault policy write internal-app - <<EOF
-      path "secret/data/auth-service*" {
+      path "secret/auth-service*" {
         capabilities = ["create", "read", "update", "delete", "list"]
       }
 
-      path "secret/data/product-service*" {
+      path "secret/product-service*" {
         capabilities = ["create", "read", "update", "delete", "list"]
       }
 
-      path "secret/data/review-service*" {
+      path "secret/review-service*" {
         capabilities = ["create", "read", "update", "delete", "list"]
       }
 
-      path "secret/data/application*" {
+      path "secret/application*" {
         capabilities = ["create", "read", "update", "delete", "list"]
       }
 
-       path "secret/data/apollo-gateway*" {
+       path "secret/apollo-gateway*" {
          capabilities = ["create", "read", "update", "delete", "list"]
       }
 EOF

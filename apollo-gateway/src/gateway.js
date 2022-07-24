@@ -15,7 +15,7 @@ initConfig().then(config => {
         ]
         startGateway(config, servers)
     } else {
-        initConsul()
+        initConsul(config)
         getServiceList((err, services) => {
             if (err) throw err;
             servers = Object.keys(services)

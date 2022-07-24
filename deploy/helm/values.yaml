@@ -22,7 +22,7 @@ apolloGateway:
   image:
     repository: suayb/apollo-gateway
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   service:
     type: ClusterIP
     port: 4000
@@ -62,7 +62,7 @@ web:
   image:
     repository: suayb/graphql-web
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   service:
     type: ClusterIP
     port: 3000

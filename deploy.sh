@@ -98,8 +98,9 @@ else
       kubectl rollout status daemonset consul-client -n ${namespace}
       helm install vault hashicorp/vault --values ./deploy/${suffix}/helm-vault-values.yml -n ${namespace}
       kubectl rollout status deployment vault-agent-injector -n ${namespace}
+
       sudo chmod +x ./deploy/helm/vault/vault-init.sh
-      ./deploy/helm/vault/vault-init.sh $namespace
+      ./deploy/helm/vault/vault-init.sh $namespace $suffix
 
       helm dep up ./deploy/${suffix}
        if [ -n "$istio" ]; then

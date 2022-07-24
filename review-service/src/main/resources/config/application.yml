@@ -3,15 +3,6 @@ spring:
     name: review-service
   profiles:
     active: local
-  cloud:
-    consul:
-      host: localhost
-      port: 8500
-      discovery:
-        instance-id: ${spring.application.name}:${random.value}
-        prefer-ip-address: true
-        acl-token: 1dc477e6-422b-33aa-4cc7-140e4386d030
-        tags: graphql
   graphql:
     graphiql:
       enabled: true
@@ -49,3 +40,11 @@ spring:
         enabled: true
         backend: secret
       uri: http://localhost:8200
+    consul:
+      host: ${SPRING_CLOUD_CONSUL_HOST:localhost}
+      port: ${SPRING_CLOUD_CONSUL_PORT:8500}
+      discovery:
+        instance-id: ${spring.application.name}:${random.value}
+        prefer-ip-address: true
+        acl-token: ${SPRING_CLOUD_CONSUL_DISCOVERY_ACL_TOKEN:1dc477e6-422b-33aa-4cc7-140e4386d030}
+        tags: graphql

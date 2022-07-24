@@ -10,9 +10,6 @@ data:
   {{ $key }}: {{ $val | quote }}
   {{- end }}
   {{- end }}
-  SPRING_PROFILES_ACTIVE: prod
-  CONSUL_HOST: consul-server
-  CONSUL_PORT: '8500'
   VAULT_URI: http://vault:8200
   VAULT_AUTHENTICATION: KUBERNETES
   KUBERNETES_ROLE: internal-app

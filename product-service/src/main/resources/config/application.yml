@@ -40,6 +40,12 @@ spring:
         enabled: true
         backend: secret
       uri: http://localhost:8200
+      mongodb:
+        enabled: true
+        role: product-admin-role
+        backend: database
+        username-property: spring.data.mongodb.username
+        password-property: spring.data.mongodb.password
     consul:
       host: ${SPRING_CLOUD_CONSUL_HOST:localhost}
       port: ${SPRING_CLOUD_CONSUL_PORT:8500}

@@ -53,18 +53,24 @@ spring:
     vault:
       authentication: APPROLE # TOKEN
       app-role:
-        role-id: b6c35726-4ae4-7eed-8144-c23195a87e1d
-        secret-id: 5f592301-ff49-0023-0bec-320c06a3bd7c
-        role: pres-read
+        role-id: b1e30e97-7498-ea51-da88-8328aeef370a
+        secret-id: 45c365c7-4b1c-3141-0421-515ca5ccc0e8
+        role: auth
         app-role-path: approle
       kv:
         enabled: true
         backend: secret
       uri: http://localhost:8200
+      mongodb:
+        enabled: true
+        role: auth-admin-role
+        backend: database
+        username-property: spring.data.mongodb.username
+        password-property: spring.data.mongodb.password
     consul:
       host: ${SPRING_CLOUD_CONSUL_HOST:localhost}
       port: ${SPRING_CLOUD_CONSUL_PORT:8500}
       discovery:
         instance-id: ${spring.application.name}:${random.value}
         prefer-ip-address: true
-        acl-token: ${SPRING_CLOUD_CONSUL_DISCOVERY_ACL_TOKEN:1dc477e6-422b-33aa-4cc7-140e4386d030}
+        acl-token: ${SPRING_CLOUD_CONSUL_DISCOVERY_ACL_TOKEN:295ffc3b-4edf-7b97-62a4-329f035bcf7c}

@@ -3,15 +3,3 @@ architecture: standalone
 auth:
   rootUser: root
   rootPassword: g44bsljDAi5nbWjf
-  usernames:
-    - auth-admin
-    - product-admin
-    - review-admin
-  passwords:
-    - iXCjXb7e2yjJbjRa
-    - iXCjXb7e2yjJbjRp
-    - iXCjXb7e2yjJbjRr
-  databases:
-    - auth
-    - product
-    - review

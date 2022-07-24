@@ -24,6 +24,11 @@
       "capabilities": [
         "create", "read", "update", "delete", "list"
       ]
+    },
+    "database/creds*": {
+      "capabilities": [
+       "read"
+      ]
     }
   }
 }

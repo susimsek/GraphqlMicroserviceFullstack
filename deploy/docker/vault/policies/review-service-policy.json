@@ -9,6 +9,11 @@
       "capabilities": [
         "create", "read", "update", "delete", "list"
       ]
+    },
+    "database/creds/review-admin-role": {
+      "capabilities": [
+        "read"
+      ]
     }
   }
 }

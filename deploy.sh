@@ -74,13 +74,14 @@ elif [ -n "$upgrade" ]; then
   fi
 else
    if [ -n "$docker" ]; then
+       docker-compose -f ./deploy/docker/docker-compose.yaml up -d mongodb
        docker-compose -f ./deploy/docker/docker-compose.yaml up -d consul
        sudo chmod +x ./deploy/docker/consul/consul-init.sh
        ./deploy/docker/consul/consul-init.sh
-       docker-compose -f ./deploy/docker/docker-compose.yaml up -d vault
+      docker-compose -f ./deploy/docker/docker-compose.yaml up -d vault
        sudo chmod +x ./deploy/docker/vault/vault-init.sh
        ./deploy/docker/vault/vault-init.sh
-       docker-compose -f ./deploy/docker/docker-compose.yaml up -d
+      docker-compose -f ./deploy/docker/docker-compose.yaml up -d
    elif [ -n "$k8s" ]; then
      if [ $helmVersion -eq 1 ]; then
        helm uninstall ${name} 2>/dev/null

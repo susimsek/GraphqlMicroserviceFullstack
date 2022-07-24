@@ -38,6 +38,32 @@ vault secrets enable -path=secret/ kv
 vault audit enable file file_path=/vault/logs/audit.log
 vault audit list
 
+vault secrets enable database
+vault write database/config/mongodb \
+    plugin_name=mongodb-database-plugin \
+    allowed_roles="auth-admin-role","product-admin-role","review-admin-role" \
+    connection_url="mongodb://{{username}}:{{password}}@mongodb:27017/admin?tls=false" \
+    username="root" \
+    password="g44bsljDAi5nbWjf"
+
+vault write database/roles/auth-admin-role \
+    db_name=mongodb\
+    creation_statements='{ "db": "admin", "roles": [{ "role": "readWrite" }, {"role": "readWrite", "db": "auth"}] }' \
+    default_ttl="1h" \
+    max_ttl="24h"
+
+vault write database/roles/product-admin-role \
+    db_name=mongodb\
+    creation_statements='{ "db": "admin", "roles": [{ "role": "readWrite" }, {"role": "readWrite", "db": "product"}] }' \
+    default_ttl="1h" \
+    max_ttl="24h"
+
+vault write database/roles/review-admin-role \
+    db_name=mongodb\
+    creation_statements='{ "db": "admin", "roles": [{ "role": "readWrite" }, {"role": "readWrite", "db": "review"}] }' \
+    default_ttl="1h" \
+    max_ttl="24h"
+
 # create the app-specific policy
 vault policy write auth-service /policies/auth-service-policy.json
 vault policy read auth-service
@@ -168,8 +194,8 @@ else if ($1 == "secret_id_accessor") print "APOLLO_GATEWAY_APP_ROLE_SECRET_ID_AC
 source deploy/docker/.env
 
 # create initial secrets
-vault kv put secret/application/prod SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://auth-service:9000 SPRING_CLOUD_CONSUL_HOST=consul SPRING_CLOUD_CONSUL_PORT=8500 SPRING_CLOUD_CONSUL_DISCOVERY_ACL_TOKEN=${CONSUL_ACL_TOKEN}
-vault kv put secret/auth-service/prod PORT=9000 AUTH-SERVER_PROVIDER_ISSUER=http://auth-service:9000 CORS_ALLOWED-ORIGINS='http://localhost:3000, http://127.0.0.1:3000, http://localhost, http://127.0.0.1' SPRING_DATA_MONGODB_URI=mongodb://auth-admin:iXCjXb7e2yjJbjRa@mongodb:27017/auth GOOGLE_CLIENT_ID=10959265505-a56ge3f9j1p4p0gf3brntbfu3r1sa58t.apps.googleusercontent.com GOOGLE_CLIENT_SECRET=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
-vault kv put secret/product-service/prod PORT=8081 SPRING_DATA_MONGODB_URI=mongodb://product-admin:iXCjXb7e2yjJbjRp@mongodb:27017/product
-vault kv put secret/review-service/prod PORT=8082 SPRING_DATA_MONGODB_URI=mongodb://review-admin:iXCjXb7e2yjJbjRr@mongodb:27017/review
+vault kv put secret/application/prod SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://auth-service:9000 SPRING_CLOUD_CONSUL_HOST=consul SPRING_CLOUD_CONSUL_PORT=8500 SPRING_CLOUD_CONSUL_DISCOVERY_ACL_TOKEN=${CONSUL_ACL_TOKEN} SPRING_DATA_MONGODB_HOST=mongodb SPRING_DATA_MONGODB_PORT=27017
+vault kv put secret/auth-service/prod PORT=9000 AUTH-SERVER_PROVIDER_ISSUER=http://auth-service:9000 CORS_ALLOWED-ORIGINS='http://localhost:3000, http://127.0.0.1:3000, http://localhost, http://127.0.0.1' GOOGLE_CLIENT_ID=10959265505-a56ge3f9j1p4p0gf3brntbfu3r1sa58t.apps.googleusercontent.com GOOGLE_CLIENT_SECRET=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
+vault kv put secret/product-service/prod PORT=8081
+vault kv put secret/review-service/prod PORT=8082
 vault kv put secret/apollo-gateway/production PORT=4000 CORS_ALLOWED_ORIGINS='http://localhost:3000, http://127.0.0.1:3000, https://studio.apollographql.com' CONSUL_HOST=consul CONSUL_PORT=8500 CONSUL_ACL_TOKEN=${CONSUL_ACL_TOKEN}

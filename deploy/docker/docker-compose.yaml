@@ -20,7 +20,6 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=g44bsljDAi5nbWjf
     volumes:
-      - ./mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
       - mongodb:/data/db
     ports:
       - "27018:27017"
@@ -97,7 +96,6 @@ services:
       - SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID=${AUTH_APP_ROLE_SECRET_ID}
     ports:
       - "9000:9000"
-
 
   product-service:
     image: suayb/product-service:latest

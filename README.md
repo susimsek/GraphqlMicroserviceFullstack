@@ -154,6 +154,12 @@ docker build -t web .
 
 ## Deployment with Docker Compose
 
+### Prerequisites for Docker Compose Deployment
+
+* Jq
+* Docker
+* Docker Compose
+
 You can deploy app by running the following bash command
 
 
@@ -179,6 +185,11 @@ http://127.0.0.1:9000
 
 
 ## Deployment Kubernetes with Helm
+
+### Prerequisites for Kubernetes Deployment
+
+* Kubernetes
+* Helm
 
 You can deploy app by running the following bash command
 

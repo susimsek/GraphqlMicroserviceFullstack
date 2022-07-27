@@ -1,0 +1,69 @@
+version: '3.8'
+
+volumes:
+  elasticsearch:
+
+networks:
+  backend:
+    name: backend
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.5
+    restart: unless-stopped
+    container_name: elasticsearch
+    networks:
+      - backend
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - ES_JAVA_OPTS=-Xmx256m -Xms256m
+      - ELASTIC_PASSWORD=7043de0e645ca9cb518d7caea91405c7
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.5
+    restart: unless-stopped
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    networks:
+      - backend
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=7043de0e645ca9cb518d7caea91405c7
+    ports:
+      - "5601:5601"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.5
+    restart: unless-stopped
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    networks:
+      - backend
+    environment:
+      - LS_JAVA_OPTS=-Xmx256m -Xms256m
+      - ELASTIC_HOST=elasticsearch:9200
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=7043de0e645ca9cb518d7caea91405c7
+      - TCP_PORT=5000
+      - XPACK_MONITORING_ELASTICSEARCH_URL=http://elasticsearch:9200
+      - XPACK_MONITORING_ELASTICSEARCH_USERNAME=elastic
+      - XPACK_MONITORING_ELASTICSEARCH_PASSWORD=7043de0e645ca9cb518d7caea91405c7
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5001:5000"
+      - "9600:9600"

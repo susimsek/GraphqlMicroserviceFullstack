@@ -1,0 +1,24 @@
+version: '3.8'
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_conf:
+
+networks:
+  local:
+
+services:
+  sonarqube:
+    image: sonarqube:8.9-community
+    restart: unless-stopped
+    container_name: sonarqube
+    networks:
+      - local
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    ports:
+      - "9000:9000"

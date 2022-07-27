@@ -51,6 +51,7 @@ helmVersion=$(helm version --client | grep -E "v3\\.[0-9]{1,3}\\.[0-9]{1,3}" | w
 if [ -n "$remove" ]; then
    if [ -n "$docker" ]; then
          docker-compose -f ./deploy/docker/docker-compose.yaml down -v
+         docker-compose -f ./deploy/docker/docker-compose-elk.yaml down -v
          rm -f deploy/docker/.env
          rm -f deploy/docker/vault/config/vault-config.json
    elif [ -n "$k8s" ]; then
@@ -75,6 +76,7 @@ elif [ -n "$upgrade" ]; then
 else
    if [ -n "$docker" ]; then
        docker-compose -f ./deploy/docker/docker-compose.yaml up -d mongodb
+       docker-compose -f ./deploy/docker/docker-compose-elk.yaml up -d
        docker-compose -f ./deploy/docker/docker-compose.yaml up -d consul
        sudo chmod +x ./deploy/docker/consul/consul-init.sh
        ./deploy/docker/consul/consul-init.sh

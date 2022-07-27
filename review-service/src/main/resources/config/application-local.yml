@@ -20,3 +20,14 @@ spring:
       resource-server:
         jwt:
           issuer-uri: http://localhost:9000
+
+logging:
+  level:
+    ROOT: DEBUG
+    io.github.susimsek.review: DEBUG
+  use-json-format: false
+  logstash:
+    enabled: false
+    host: localhost
+    port: 5001
+    ring-buffer-size: 512

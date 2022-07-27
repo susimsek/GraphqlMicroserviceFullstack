@@ -233,6 +233,9 @@ https://auth.susimsek.github.io
 * Consul
 * Nginx
 * Mongodb
+* Elasticsearch
+* Kibana
+* Logstash
 * Apollo Gateway
 * Spring Boot
 * Spring Cloud
@@ -248,6 +251,7 @@ https://auth.susimsek.github.io
 * Spring Boot Actuator
 * Spring Boot Configuration Processor
 * Federation Graphql Java Support
+* Logstash Logback Encoder
 
 ## Frontend Side
 * React

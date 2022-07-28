@@ -10,6 +10,7 @@ server:
   bootstrapExpect: 1
   disruptionBudget:
     maxUnavailable: 0
+  storage: 75M
 
 client:
   enabled: true

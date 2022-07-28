@@ -1,0 +1,71 @@
+replicas: 1
+
+persistence:
+  enabled: false
+
+logstashJavaOpts: "-Xmx1g -Xms1g"
+
+logstashConfig:
+  logstash.yml: |
+    http.host: 0.0.0.0
+    xpack.monitoring.elasticsearch.hosts: ["http://elasticsearch-master:9200"]
+    xpack.monitoring.enabled: true
+    xpack.monitoring.elasticsearch.username: elastic
+    xpack.monitoring.elasticsearch.password: 7043de0e645ca9cb518d7caea91405c7
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "1536Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1536Mi"
+
+volumeClaimTemplate:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 75M
+
+extraEnvs:
+  - name: "ELASTIC_HOST"
+    value: http://elasticsearch-master:9200
+  - name: "ELASTIC_USERNAME"
+    value: elastic
+  - name: "ELASTIC_PASSWORD"
+    value: 7043de0e645ca9cb518d7caea91405c7
+  - name: "TCP_PORT"
+    value: "5000"
+
+logstashPipeline:
+  logstash.conf: |
+    input { tcp { port => "${TCP_PORT:5000}" codec => json } }
+    output { elasticsearch { hosts => ["${ELASTIC_HOST}"] user => "${ELASTIC_USERNAME}" password => "${ELASTIC_PASSWORD}" index => "%{app_name}-logs" } }
+
+service:
+  type: ClusterIP
+  ports:
+    - name: tcp
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1

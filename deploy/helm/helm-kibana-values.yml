@@ -1,0 +1,17 @@
+elasticsearchHosts: "http://elasticsearch-master:9200"
+
+replicas: 1
+
+extraEnvs:
+  - name: "ELASTICSEARCH_USERNAME"
+    value: elastic
+  - name: "ELASTICSEARCH_PASSWORD"
+    value: 7043de0e645ca9cb518d7caea91405c7
+
+resources:
+  requests:
+    cpu: "55m"
+    memory: "512Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"

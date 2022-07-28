@@ -2,6 +2,7 @@ server:
   affinity: ""
   ha:
     enabled: true
+    replicas: 1
     config: |
       ui = true
       

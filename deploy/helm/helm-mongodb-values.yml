@@ -3,3 +3,6 @@ architecture: standalone
 auth:
   rootUser: root
   rootPassword: g44bsljDAi5nbWjf
+
+persistence:
+  size: 75M

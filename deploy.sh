@@ -55,12 +55,18 @@ if [ -n "$remove" ]; then
          rm -f deploy/docker/.env
          rm -f deploy/docker/vault/config/vault-config.json
    elif [ -n "$k8s" ]; then
+        helm uninstall elasticsearch -n ${namespace}
+        helm uninstall kibana -n ${namespace}
+        helm uninstall logstash -n ${namespace}
         helm uninstall mongodb -n ${namespace}
         helm uninstall consul -n ${namespace}
         helm uninstall vault -n ${namespace}
         helm uninstall ${name} -n ${namespace}
         kubectl -n ${namespace} delete sa internal-app
+        kubectl delete pvc --selector="app.kubernetes.io/name=mongodb" -n ${namespace}
         kubectl delete pvc --selector="chart=consul-helm" -n ${namespace}
+        kubectl delete pvc --selector="app=elasticsearch-master" -n ${namespace}
+        kubectl delete pvc --selector="app=logstash-logstash" -n ${namespace}
         kubectl -n ${namespace} get secrets --field-selector="type=Opaque" | grep consul | awk '{print $1}' | xargs kubectl -n ${namespace} delete secret
         kubectl -n ${namespace} delete serviceaccount consul-tls-init
         rm -f deploy/${suffix}/cluster-keys.json
@@ -93,15 +99,22 @@ else
       kubectl create namespace ${namespace}
       helm repo add hashicorp https://helm.releases.hashicorp.com
       helm repo add bitnami https://charts.bitnami.com/bitnami
+      helm repo add elastic https://helm.elastic.co
       helm repo update
       helm install mongodb bitnami/mongodb --values ./deploy/${suffix}/helm-mongodb-values.yml -n ${namespace}
       kubectl rollout status deployment mongodb -n ${namespace}
+      helm install elasticsearch elastic/elasticsearch --values ./deploy/${suffix}/helm-elasticsearch-values.yml -n ${namespace}
+      kubectl rollout status statefulset elasticsearch-master -n ${namespace}
+      helm install kibana elastic/kibana --values ./deploy/${suffix}/helm-kibana-values.yml -n ${namespace}
+      kubectl rollout status deployment kibana-kibana -n ${namespace}
+      helm install logstash elastic/logstash --values ./deploy/${suffix}/helm-logstash-values.yml -n ${namespace}
+      kubectl rollout status statefulset logstash-logstash -n ${namespace}
       helm install consul hashicorp/consul --values ./deploy/${suffix}/helm-consul-values.yml -n ${namespace}
       kubectl rollout status statefulset consul-server -n ${namespace}
       kubectl rollout status daemonset consul-client -n ${namespace}
       helm install vault hashicorp/vault --values ./deploy/${suffix}/helm-vault-values.yml -n ${namespace}
       kubectl rollout status deployment vault-agent-injector -n ${namespace}
-
+      sleep 20
       sudo chmod +x ./deploy/helm/vault/vault-init.sh
       ./deploy/helm/vault/vault-init.sh $namespace $suffix
 

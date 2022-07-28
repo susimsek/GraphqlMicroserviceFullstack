@@ -19,6 +19,7 @@ services:
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - ES_JAVA_OPTS=-Xmx256m -Xms256m
+      - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=7043de0e645ca9cb518d7caea91405c7
     ulimits:
       memlock:

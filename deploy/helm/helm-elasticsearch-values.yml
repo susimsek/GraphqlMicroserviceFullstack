@@ -1,0 +1,46 @@
+# Permit co-located instances for solitary minikube virtual machines.
+antiAffinity: "soft"
+
+# Shrink default JVM heap.
+esJavaOpts: "-Xmx128m -Xms128m"
+
+replicas: 1
+minimumMasterNodes: 1
+
+imagePullPolicy: "IfNotPresent"
+
+# Allocate smaller chunks of memory per pod.
+resources:
+  requests:
+    cpu: "100m"
+    memory: "512M"
+  limits:
+    cpu: "1000m"
+    memory: "512M"
+
+# Request smaller persistent volumes.
+volumeClaimTemplate:
+  accessModes: [ "ReadWriteOnce" ]
+  resources:
+    requests:
+      storage: 75M
+
+extraEnvs:
+  - name: "ELASTIC_USERNAME"
+    value: elastic
+  - name: "ELASTIC_PASSWORD"
+    value: 7043de0e645ca9cb518d7caea91405c7
+
+esConfig:
+  elasticsearch.yml: |
+    xpack.security.enabled: true
+
+readinessProbe:
+  failureThreshold: 5
+  initialDelaySeconds: 90
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html#request-params wait_for_status
+clusterHealthCheckParams: "wait_for_status=green&timeout=1s"

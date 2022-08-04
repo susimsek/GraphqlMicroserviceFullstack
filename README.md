@@ -130,18 +130,17 @@ You can test code quality locally via sonarqube by typing the following command
 npm run sonar
 ```
 
+Once the analysis completes, it will be available on the Sonar dashboard, which by default is available on http://localhost:9000.
+
 ## Caching
 
-Redis is an Open Source, in-memory data struture store that can be used as a performant caching solution 
-Depending on your configuration, you can choose to use Redis as a single server node or as a distributed cache 
+Redis is an Open Source, in-memory data structure store that can be used as a performant caching solution Depending on your configuration, you can choose to use Redis as a single server node or as a distributed cache   
+
 Default cache expire time is 1 hour but you can change it via vault by changing the following environment variable
 
 ```sh
 CACHE_EXPIRATION=3600s
 ```
-
-
-Once the analysis completes, it will be available on the Sonar dashboard, which by default is available on http://localhost:9000.
 
 # Docker
 

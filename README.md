@@ -132,7 +132,8 @@ npm run sonar
 
 ## Caching
 
-Redis is an Open Source, in-memory data struture store that can be used as a performant caching solution. Depending on your configuration, you can choose to use Redis as a single server node or as a distributed cache.
+Redis is an Open Source, in-memory data struture store that can be used as a performant caching solution 
+Depending on your configuration, you can choose to use Redis as a single server node or as a distributed cache 
 Default cache expire time is 1 hour but you can change it via vault by changing the following environment variable
 
 ```sh

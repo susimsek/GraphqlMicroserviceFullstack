@@ -1,0 +1,37 @@
+version: '3.8'
+
+volumes:
+  redis:
+  redisinsight:
+
+networks:
+  backend:
+    name: backend
+
+services:
+  redis:
+    image: redis:7.0.4
+    restart: unless-stopped
+    container_name: redis
+    networks:
+      - backend
+    command: redis-server --appendonly yes --requirepass "$REDIS_PASSWORD"
+    environment:
+      - REDIS_PASSWORD=d41d8cd98f00b204e9800998ecf8427e
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
+
+  redisinsight:
+    image: redislabs/redisinsight
+    restart: unless-stopped
+    container_name: redisinsight
+    networks:
+      - backend
+    environment:
+      - RIPORT=8001
+    volumes:
+      - redisinsight:/db
+    ports:
+      - "8001:8001"

@@ -40,10 +40,10 @@ kubectl -n ${namespace} exec vault-0 -- vault operator init -key-shares=1 -key-t
           default_ttl="1h" \
           max_ttl="24h"
 
-      vault kv put secret/application/prod SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://auth-service:9000 SPRING_CLOUD_CONSUL_HOST=consul-server SPRING_CLOUD_CONSUL_PORT=8500 SPRING_DATA_MONGODB_HOST=mongodb SPRING_DATA_MONGODB_PORT=27017 LOGSTASH_HOST=logstash-logstash LOGSTASH_PORT=5000
-      vault kv put secret/auth-service/prod PORT=9000 AUTH-SERVER_PROVIDER_ISSUER=http://auth-service:9000 CORS_ALLOWED-ORIGINS='http://localhost:3000, http://127.0.0.1:3000, http://gqlmsweb.susimsek.github.io, https://gqlmsweb.susimsek.github.io' GOOGLE_CLIENT_ID=10959265505-a56ge3f9j1p4p0gf3brntbfu3r1sa58t.apps.googleusercontent.com GOOGLE_CLIENT_SECRET=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
-      vault kv put secret/product-service/prod PORT=8081
-      vault kv put secret/review-service/prod PORT=8082
+      vault kv put secret/application/prod SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://auth-service:9000 SPRING_CLOUD_CONSUL_HOST=consul-server SPRING_CLOUD_CONSUL_PORT=8500 SPRING_DATA_MONGODB_HOST=mongodb SPRING_DATA_MONGODB_PORT=27017 LOGSTASH_HOST=logstash-logstash LOGSTASH_PORT=5000 SPRING_REDIS_HOST=redis-master SPRING_REDIS_PORT=6379 SPRING_REDIS_DATABASE=0 SPRING_REDIS_PASSWORD=d41d8cd98f00b204e9800998ecf8427e
+      vault kv put secret/auth-service/prod PORT=9000 AUTH-SERVER_PROVIDER_ISSUER=http://auth-service:9000 CORS_ALLOWED-ORIGINS='http://localhost:3000, http://127.0.0.1:3000, http://gqlmsweb.susimsek.github.io, https://gqlmsweb.susimsek.github.io' GOOGLE_CLIENT_ID=10959265505-a56ge3f9j1p4p0gf3brntbfu3r1sa58t.apps.googleusercontent.com GOOGLE_CLIENT_SECRET=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 ACCESS_TOKEN_TIME_TO_LIVE=5m REFRESH_TOKEN_TIME_TO_LIVE=5m
+      vault kv put secret/product-service/prod PORT=8081 CACHE_EXPIRATION=3600s
+      vault kv put secret/review-service/prod PORT=8082 CACHE_EXPIRATION=3600s
       vault kv put secret/apollo-gateway/production PORT=4000 CORS_ALLOWED_ORIGINS='http://localhost:3000, http://127.0.0.1:3000, https://studio.apollographql.com' CONSUL_HOST=consul-server CONSUL_PORT=8500
 
       vault auth enable kubernetes

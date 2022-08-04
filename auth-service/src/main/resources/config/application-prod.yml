@@ -19,6 +19,10 @@ auth-server:
   provider:
     issuer: ${AUTH-SERVER_PROVIDER_ISSUER:http://auth-service:8080}
 
+token:
+  access-token-time-to-live: ${ACCESS_TOKEN_TIME_TO_LIVE:5m}
+  refresh-token-time-to-live: ${REFRESH_TOKEN_TIME_TO_LIVE:5m}
+
 logging:
   level:
     ROOT: INFO

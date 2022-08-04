@@ -20,6 +20,10 @@ auh-server:
   provider:
    issuer: http://localhost:9000
 
+token:
+  access-token-time-to-live: 1d
+  refresh-token-time-to-live: 1d
+
 logging:
   level:
     ROOT: DEBUG

@@ -233,6 +233,7 @@ https://auth.susimsek.github.io
 * Consul
 * Nginx
 * Mongodb
+* Redis
 * Elasticsearch
 * Kibana
 * Logstash

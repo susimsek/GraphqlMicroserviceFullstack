@@ -9,4 +9,5 @@ import reactor.core.publisher.Flux
 interface ReviewRepository : ReactiveMongoRepository<Review, String> {
 
     fun findByProductIdIn(productIds: MutableList<String?>): Flux<Review>
+    fun findByProductId(productId: String): Flux<Review>
 }

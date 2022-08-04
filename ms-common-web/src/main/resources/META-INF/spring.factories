@@ -3,7 +3,8 @@ io.github.susimsek.mscommonweb.graphql.GraphqlDateTimeAutoConfiguration,\
 io.github.susimsek.mscommonweb.graphql.GraphqlExceptionResolverAutoConfiguration,\
 io.github.susimsek.mscommonweb.mongo.MongoDateTimeAutoConfiguration,\
 io.github.susimsek.mscommonweb.security.WebSecurityAutoConfiguration,\
-io.github.susimsek.mscommonweb.logging.LoggingAutoConfiguration
+io.github.susimsek.mscommonweb.logging.LoggingAutoConfiguration,\
+  io.github.susimsek.mscommonweb.cache.RedisReactiveCacheAutoConfiguration
 
 org.springframework.nativex.type.NativeConfiguration=\
 io.github.susimsek.mscommonweb.graphql.GraphQlNativeHints,\

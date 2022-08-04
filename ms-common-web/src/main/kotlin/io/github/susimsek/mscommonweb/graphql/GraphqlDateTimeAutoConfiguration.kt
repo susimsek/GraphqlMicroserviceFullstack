@@ -2,6 +2,7 @@ package io.github.susimsek.mscommonweb.graphql
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import graphql.schema.GraphQLScalarType
 import io.github.susimsek.mscommonweb.graphql.scalar.GraphQlDateTimeProperties
 import io.github.susimsek.mscommonweb.graphql.scalar.ScalarUtil
@@ -21,6 +22,7 @@ class GraphqlDateTimeAutoConfiguration {
         return Jackson2ObjectMapperBuilderCustomizer { builder: Jackson2ObjectMapperBuilder ->
             builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             builder.featuresToDisable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
+            builder.modules(JavaTimeModule())
         }
     }
 

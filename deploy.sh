@@ -51,10 +51,12 @@ helmVersion=$(helm version --client | grep -E "v3\\.[0-9]{1,3}\\.[0-9]{1,3}" | w
 if [ -n "$remove" ]; then
    if [ -n "$docker" ]; then
          docker-compose -f ./deploy/docker/docker-compose.yaml down -v
+         docker-compose -f ./deploy/docker/docker-compose-redis.yaml down -v
          docker-compose -f ./deploy/docker/docker-compose-elk.yaml down -v
          rm -f deploy/docker/.env
          rm -f deploy/docker/vault/config/vault-config.json
    elif [ -n "$k8s" ]; then
+        helm uninstall redis -n ${namespace}
         helm uninstall elasticsearch -n ${namespace}
         helm uninstall kibana -n ${namespace}
         helm uninstall logstash -n ${namespace}
@@ -64,6 +66,7 @@ if [ -n "$remove" ]; then
         helm uninstall ${name} -n ${namespace}
         kubectl -n ${namespace} delete sa internal-app
         kubectl delete pvc --selector="app.kubernetes.io/name=mongodb" -n ${namespace}
+        kubectl delete pvc --selector="app.kubernetes.io/name=redis" -n ${namespace}
         kubectl delete pvc --selector="chart=consul-helm" -n ${namespace}
         kubectl delete pvc --selector="app=elasticsearch-master" -n ${namespace}
         kubectl delete pvc --selector="app=logstash-logstash" -n ${namespace}
@@ -82,6 +85,7 @@ elif [ -n "$upgrade" ]; then
 else
    if [ -n "$docker" ]; then
        docker-compose -f ./deploy/docker/docker-compose.yaml up -d mongodb
+       docker-compose -f ./deploy/docker/docker-compose-redis.yaml up -d
        docker-compose -f ./deploy/docker/docker-compose-elk.yaml up -d
        docker-compose -f ./deploy/docker/docker-compose.yaml up -d consul
        sudo chmod +x ./deploy/docker/consul/consul-init.sh
@@ -103,6 +107,8 @@ else
       helm repo update
       helm install mongodb bitnami/mongodb --values ./deploy/${suffix}/helm-mongodb-values.yml -n ${namespace}
       kubectl rollout status deployment mongodb -n ${namespace}
+      helm install redis bitnami/redis --values ./deploy/${suffix}/helm-redis-values.yml -n ${namespace}
+      kubectl rollout status statefulset redis-master -n ${namespace}
       helm install elasticsearch elastic/elasticsearch --values ./deploy/${suffix}/helm-elasticsearch-values.yml -n ${namespace}
       kubectl rollout status statefulset elasticsearch-master -n ${namespace}
       helm install kibana elastic/kibana --values ./deploy/${suffix}/helm-kibana-values.yml -n ${namespace}

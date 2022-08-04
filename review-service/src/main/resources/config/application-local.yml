@@ -20,6 +20,14 @@ spring:
       resource-server:
         jwt:
           issuer-uri: http://localhost:9000
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    password: d41d8cd98f00b204e9800998ecf8427e
+
+  cache:
+    expiration: 5m
 
 logging:
   level:

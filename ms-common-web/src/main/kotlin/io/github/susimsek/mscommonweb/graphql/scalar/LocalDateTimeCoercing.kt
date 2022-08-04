@@ -14,25 +14,35 @@ class LocalDateTimeCoercing(
     private val formatter: DateTimeFormatter
 ) : Coercing<LocalDateTime, String?> {
 
+    private fun convertImpl(input: Any): LocalDateTime? {
+        if (input is String) {
+            return LocalDateTime.parse(input, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        } else if (input is LocalDateTime) {
+            return input
+        }
+        return null
+    }
+
+
     @Throws(CoercingSerializeException::class)
-    override fun serialize(dataFetcherResult: Any): String? {
-        if (dataFetcherResult is LocalDateTime) {
-            return dataFetcherResult.format(formatter)
+    override fun serialize(input: Any): String? {
+        return if (input is LocalDateTime) {
+            input.format(formatter)
         } else {
-            throw CoercingSerializeException("$dataFetcherResult, Not a valid LocalDateTime")
+            val result = convertImpl(input) ?:  throw CoercingParseValueException("Invalid value '$input' for LocalDateTime")
+            result.format(formatter)
         }
     }
 
     @Throws(CoercingParseValueException::class)
     override fun parseValue(input: Any): LocalDateTime {
-        return LocalDateTime.parse(input.toString(), formatter)
+        return convertImpl(input) ?: throw CoercingParseValueException("Invalid value '$input' for LocalDateTime")
     }
 
     @Throws(CoercingParseLiteralException::class)
     override fun parseLiteral(input: Any): LocalDateTime {
-        if (input is StringValue) {
-            return LocalDateTime.parse(input.value, formatter)
-        }
-        throw CoercingParseLiteralException("$input, Value is not a valid ISO LocalDateTime")
+        val value = (input as StringValue).value
+        return convertImpl(value)
+            ?: throw CoercingParseLiteralException("Invalid value '$input' for LocalDateTime")
     }
 }

@@ -1,17 +1,17 @@
 package io.github.susimsek.product.bootstrap
 
 import io.github.susimsek.product.model.Product
-import io.github.susimsek.product.repository.ProductRepository
+import io.github.susimsek.product.service.ProductService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 
 @Component
-internal class DataInitializr(private val productRepository: ProductRepository) : CommandLineRunner {
+internal class DataInitializr(private val productService: ProductService) : CommandLineRunner {
 
     override fun run(args: Array<String>) {
-        productRepository
-            .deleteAll()
+        productService
+            .deleteAllProducts()
             .thenMany<Any>(
                 Flux
                     .just(
@@ -22,7 +22,7 @@ internal class DataInitializr(private val productRepository: ProductRepository) 
                         Product(id = "5", name = "Dragon", description = "Reusable Medium-Lift Rocket"),
                         Product(id = "6", name = "Starship", description = "Super Heavy-Lift Reusable Launch Vehicle")
                     )
-                    .flatMap(productRepository::save)
+                    .flatMap(productService::saveProduct)
             )
             .subscribe()
     }

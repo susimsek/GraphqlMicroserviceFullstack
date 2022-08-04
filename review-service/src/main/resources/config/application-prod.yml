@@ -19,6 +19,14 @@ spring:
       resource-server:
         jwt:
           issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI:http://localhost:9000}
+  redis:
+    host: ${SPRING_REDIS_HOST:localhost}
+    port: ${SPRING_REDIS_PORT:6379}
+    database: ${SPRING_REDIS_DATABASE:0}
+    password: ${SPRING_REDIS_PASSWORD:d41d8cd98f00b204e9800998ecf8427e}
+
+  cache:
+    expiration: ${CACHE_EXPIRATION:3600s}
 
 logging:
   level:

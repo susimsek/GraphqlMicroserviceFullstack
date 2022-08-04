@@ -40,11 +40,10 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.RequestMatcher
 import java.security.KeyStore
-import java.time.Duration
 
 
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(JWKSetProperties::class)
+@EnableConfigurationProperties(JWKSetProperties::class, TokenProperties::class)
 class AuthorizationServerConfig(
     private val providerProperties: ProviderProperties
 ) {
@@ -139,10 +138,10 @@ class AuthorizationServerConfig(
     }
 
     @Bean
-    fun tokenSettings(): TokenSettings {
+    fun tokenSettings(tokenProperties: TokenProperties): TokenSettings {
         return TokenSettings.builder()
-            .accessTokenTimeToLive(Duration.ofMinutes(5))
-            .refreshTokenTimeToLive(Duration.ofMinutes(10))
+            .accessTokenTimeToLive(tokenProperties.accessTokenTimeToLive)
+            .refreshTokenTimeToLive(tokenProperties.refreshTokenTimeToLive)
             .build()
     }
 

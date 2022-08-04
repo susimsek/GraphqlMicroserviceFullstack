@@ -32,15 +32,15 @@ class ReactiveRedisCacheManager<T>(
         return reactiveHashOperations.values(key)
     }
 
-    override fun putAll(key: String, map: Map<String, T>): Flux<T> {
+    override fun putAll(key: String, map: Map<String, T>): Mono<Map<String, T>> {
         return putAll(key, map, cacheProperties.expiration)
     }
 
-    override fun putAll(key: String, map: Map<String, T>, expiration: Duration): Flux<T> {
+    override fun putAll(key: String, map: Map<String, T>, expiration: Duration): Mono<Map<String, T>> {
         val update = reactiveHashOperations.putAll(key, map)
-            .flatMapIterable { map.values }
+            .map { map }
         val setTtl = redisOperations.expire(key, expiration)
-        return update.then(setTtl).flatMapMany{update}
+        return update.then(setTtl).flatMap{update}
     }
 
     override fun get(key: String, hashKey: String): Mono<T> {

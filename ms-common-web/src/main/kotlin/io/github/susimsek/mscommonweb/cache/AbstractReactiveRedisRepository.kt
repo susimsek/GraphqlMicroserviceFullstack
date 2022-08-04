@@ -31,7 +31,7 @@ abstract class AbstractReactiveRedisRepository<T> : ReactiveRedisRepository<T> {
         return reactiveCacheManager.deleteAll(getKey())
     }
 
-    override fun saveAll(map: Map<String, T>): Flux<T> {
+    override fun saveAll(map: Map<String, T>): Mono<Map<String, T>> {
         return reactiveCacheManager.putAll(getKey(), map)
     }
 

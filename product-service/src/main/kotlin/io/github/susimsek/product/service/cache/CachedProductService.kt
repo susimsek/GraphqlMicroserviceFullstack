@@ -53,6 +53,7 @@ class CachedProductService(
     private fun getAllFromDatabase(): Flux<Product> {
         return productService.getAllProducts()
             .collectMap(Product::id)
-            .flatMapMany(productRedisRepository::saveAll)
+            .flatMap(productRedisRepository::saveAll)
+            .flatMapIterable { it.values }
     }
 }

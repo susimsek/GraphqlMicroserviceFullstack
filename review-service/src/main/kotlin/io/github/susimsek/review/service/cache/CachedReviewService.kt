@@ -39,15 +39,10 @@ class CachedReviewService(
     }
 
     override fun saveAllReviews(reviews: MutableList<Review>): Flux<Review> {
-        val map = reviews
-            .groupBy { review -> review.productId.hashCode().toString() }
-            .map { (hashKey, reviews) ->
-                hashKey to reviews
-                    .associateBy { it.id }
-                    .toMutableMap()
-            }.toMap()
         return reviewService.saveAllReviews(reviews)
-            .thenMany(reviewRedisRepository.saveAll(map))
+            .collectMultimap { it.productId.hashCode().toString() }
+            .map {it.mapValues { reviewMap -> reviewMap.value.associateBy { review -> review.id }.toMutableMap() } }
+            .flatMap(reviewRedisRepository::saveAll)
             .flatMapIterable { reviews }
     }
 

@@ -13,20 +13,20 @@ class ReviewRedisRepository: AbstractReactiveRedisRepository<MutableMap<String, 
 
     fun saveReview(review: Review): Mono<Review> {
         val cacheResult = findById(review.productId.hashCode().toString())
-        return cacheResult.hasElement()
-            .flatMap {
-                when (it) {
-                    true -> cacheResult.flatMap { reviews -> updateReview(review, reviews) }
-                    else -> addReview(review)
-                }
-            }.map { review }
+        return cacheResult.hasElement().flatMap {exists ->
+            when (exists) {
+                false -> addReview(review)
+                true -> cacheResult.flatMap{updateReview(review, it)}
+            }
+        }
     }
 
-    private fun addReview(review: Review): Mono<MutableMap<String, Review>> {
+    private fun addReview(review: Review): Mono<Review> {
         return save(review.productId.hashCode().toString(), hashMapOf(review.id to review))
+            .map{ review }
     }
 
-    private fun updateReview(review: Review, map: MutableMap<String, Review>): Mono<MutableMap<String, Review>> {
+    private fun updateReview(review: Review, map: MutableMap<String, Review>): Mono<Review> {
         when (val stored = map[review.id]) {
             null -> map[review.id] = review
             else -> {
@@ -36,5 +36,6 @@ class ReviewRedisRepository: AbstractReactiveRedisRepository<MutableMap<String, 
             }
         }
         return save(review.productId.hashCode().toString(), map)
+            .map{ review }
     }
 }

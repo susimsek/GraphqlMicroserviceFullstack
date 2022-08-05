@@ -21,6 +21,6 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
       - run: mvn dependency:go-offline
       # run tests!
-      - run: mvn clean package
+      - run: mvn clean install
 
       - run: mvn -ntp jib:build -Pjib compile -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_PASS

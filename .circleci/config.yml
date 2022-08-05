@@ -1,4 +1,34 @@
-version: 2
+version: 2.1
+
+aliases:
+  - &maven-settings-file
+      "\"<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.1.0'
+              xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+            <servers>
+              <server>
+                   <id>github</id>
+                   <username>$GITHUB_USERNAME</username>
+                   <password>$GITHUB_PASSWORD</password>
+              </server>
+              <server>
+                    <id>registry.hub.docker.com</id>
+                    <username>$DOCKER_REGISTRY_USERNAME</username>
+                    <password><$DOCKER_REGISTRY_PASSWORD ></password>
+              </server>
+            </servers>
+          </settings>\""
+commands:
+  generate-maven-settings-file:
+    parameters:
+      settings-file:
+        type: string
+    steps:
+      - run:
+          name: Generate Maven Settings File
+          command: |
+            mkdir -p ~/.m2
+            echo -e << parameters.settings-file >> > ~/.m2/settings.xml
+            
 jobs:
   build:
     docker:
@@ -12,6 +42,8 @@ jobs:
     steps:
       - checkout:
           path: ~/app
+      - generate-maven-settings-file:
+          settings-file: *maven-settings-file
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
@@ -22,6 +54,6 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
       - run: mvn dependency:go-offline
       # run tests!
-      - run: mvn clean install
+      - run: mvn clean package
 
-      - run: mvn -ntp jib:build -Pjib compile -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_PASS
+      - run: mvn -ntp -Pjib compile jib:build

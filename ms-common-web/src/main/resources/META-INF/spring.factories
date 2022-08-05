@@ -5,7 +5,3 @@ io.github.susimsek.mscommonweb.mongo.MongoDateTimeAutoConfiguration,\
 io.github.susimsek.mscommonweb.security.WebSecurityAutoConfiguration,\
 io.github.susimsek.mscommonweb.logging.LoggingAutoConfiguration,\
   io.github.susimsek.mscommonweb.cache.RedisReactiveCacheAutoConfiguration
-
-org.springframework.nativex.type.NativeConfiguration=\
-io.github.susimsek.mscommonweb.graphql.GraphQlNativeHints,\
-io.github.susimsek.mscommonweb.mongo.MongoNativeHints

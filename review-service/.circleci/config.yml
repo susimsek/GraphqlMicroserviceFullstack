@@ -28,7 +28,7 @@ commands:
           command: |
             mkdir -p ~/.m2
             echo -e << parameters.settings-file >> > ~/.m2/settings.xml
-            
+
 jobs:
   build:
     docker:
@@ -46,13 +46,25 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
-
+      - run:
+          name: Print Java Version
+          command: java -version
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn dependency:go-offline
-      # run tests!
-      - run: mvn clean package
-
-      - run: mvn -ntp -Pjib compile jib:build
+      - run:
+          name: Install Dependencies
+          command: mvn dependency:go-offline
+      - run:
+          name: Test
+          command: mvn -ntp clean test
+      - run:
+          name: Packaging
+          command: mvn -ntp package -DskipTests
+      - run:
+          name: Quality Analysis
+          command: mvn -ntp -Psonar initialize sonar:sonar -Dsonar.login=$SONAR_TOKEN
+      - run:
+          name: Publish Docker
+          command: mvn -ntp -Pjib jib:build -DskipTests

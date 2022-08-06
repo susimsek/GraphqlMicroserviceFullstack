@@ -57,7 +57,7 @@ jobs:
           name: Install Dependencies
           command: mvn dependency:go-offline
       - run:
-          name:  Test
+          name: Test
           command: mvn -ntp clean test
       - run:
           name: Packaging

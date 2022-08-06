@@ -57,4 +57,4 @@ jobs:
       - run: mvn -ntp clean test
       - run: mvn -ntp package -DskipTests
       - run: mvn -ntp -Psonar initialize sonar:sonar -Dsonar.login=$SONAR_TOKEN
-      - run: mvn -ntp -Pjib jib:build DskipTests
+      - run: mvn -ntp -Pjib jib:build -DskipTests

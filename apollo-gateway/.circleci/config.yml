@@ -8,13 +8,7 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:16-buster
-        auth:
-          username: $DOCKER_REGISTRY_USERNAME
-          password: $DOCKER_REGISTRY_PASSWORD
     working_directory: ~/app
-    environment:
-      # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
 
     steps:
       - checkout
@@ -23,7 +17,7 @@ jobs:
           docker_layer_caching: true
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package-lock.json"" }}
+            - v1-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: Print Node Version
           command: node -v
@@ -49,6 +43,7 @@ jobs:
           name: Publish Docker
           command: |
             TAG=latest
-            docker build -t suayb/apollo-gateway:$TAG .
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker push suayb/apollo-gateway:$TAG
+            IMAGE_NAME=suayb/apollo-gateway
+            docker build -t $IMAGE_NAME:$TAG .
+            echo $DOCKER_REGISTRY_PASSWORD | docker login -u $DOCKER_REGISTRY_USERNAME --password-stdin
+            docker push $IMAGE_NAME:$TAG

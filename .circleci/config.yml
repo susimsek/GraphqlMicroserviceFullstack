@@ -7,11 +7,8 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:16-buster
-    working_directory: ~/app/apollo-gateway
-    environment:
-      # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
+      - image: circleci/node:18-buster
+    working_directory: ~/app/frontend
 
     steps:
       - checkout:
@@ -47,6 +44,7 @@ jobs:
           name: Publish Docker
           command: |
             TAG=latest
-            docker build -t suayb/apollo-gateway:$TAG .
+            IMAGE_NAME=suayb/graphql-web
+            docker build -t $IMAGE_NAME:$TAG .
             echo $DOCKER_REGISTRY_PASSWORD | docker login -u $DOCKER_REGISTRY_USERNAME --password-stdin
-            docker push suayb/apollo-gateway:$TAG
+            docker push $IMAGE_NAME:$TAG

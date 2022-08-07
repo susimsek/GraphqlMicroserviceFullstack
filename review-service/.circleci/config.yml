@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  snyk: snyk/snyk@1.2.3
+
 aliases:
   - &maven-settings-file
       "\"<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.1.0'
@@ -56,6 +59,11 @@ jobs:
       - run:
           name: Install Dependencies
           command: mvn dependency:go-offline
+      - snyk/scan:
+          fail-on-issues: false
+          monitor-on-build: true
+          severity-threshold: low
+          token-variable: SNYK_TOKEN
       - run:
           name: Test
           command: mvn -ntp clean test

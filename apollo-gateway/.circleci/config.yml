@@ -11,14 +11,13 @@ jobs:
         auth:
           username: $DOCKER_REGISTRY_USERNAME
           password: $DOCKER_REGISTRY_PASSWORD
-    working_directory: ~/app/apollo-gateway
+    working_directory: ~/app
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
 
     steps:
-      - checkout:
-          path: ~/app
+      - checkout
       - setup_remote_docker:
           version: 20.10.14
           docker_layer_caching: true

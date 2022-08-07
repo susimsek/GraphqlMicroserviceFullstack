@@ -44,19 +44,12 @@ jobs:
 
     steps:
       - checkout:
-          path: app
+          path: ~/app
       - generate-maven-settings-file:
           settings-file: *maven-settings-file
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
       - run:
           name: Print Java Version
           command: java -version
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
       - snyk/scan:
           fail-on-issues: false
           monitor-on-build: true

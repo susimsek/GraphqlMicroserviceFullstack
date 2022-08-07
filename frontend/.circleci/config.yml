@@ -1,0 +1,49 @@
+version: 2.1
+
+orbs:
+  snyk: snyk/snyk@1.2.3
+
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:17-buster
+    working_directory: ~/app
+
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: Print Node Version
+          command: node -v
+      - run:
+          name: Print NPM Version
+          command: npm -v
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - snyk/scan:
+          fail-on-issues: false
+          monitor-on-build: true
+          severity-threshold: low
+          token-variable: SNYK_TOKEN
+      - run:
+          name: Quality Analysis
+          command: npm run sonar
+      - run:
+          name: Publish Docker
+          command: |
+            TAG=latest
+            IMAGE_NAME=suayb/graphql-web
+            docker build -t $IMAGE_NAME:$TAG .
+            echo $DOCKER_REGISTRY_PASSWORD | docker login -u $DOCKER_REGISTRY_USERNAME --password-stdin
+            docker push $IMAGE_NAME:$TAG

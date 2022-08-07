@@ -8,9 +8,6 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:16-buster
-        auth:
-          username: $DOCKER_REGISTRY_USERNAME
-          password: $DOCKER_REGISTRY_PASSWORD
     working_directory: ~/app/apollo-gateway
     environment:
       # Customize the JVM maximum heap limit
@@ -51,5 +48,5 @@ jobs:
           command: |
             TAG=latest
             docker build -t suayb/apollo-gateway:$TAG .
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            echo $DOCKER_REGISTRY_PASSWORD | docker login -u $DOCKER_REGISTRY_USERNAME --password-stdin
             docker push suayb/apollo-gateway:$TAG

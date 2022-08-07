@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:18
+      - image: circleci/node:17-buster
     working_directory: ~/app/frontend
 
     steps:

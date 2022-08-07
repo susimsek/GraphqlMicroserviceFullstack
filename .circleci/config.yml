@@ -37,7 +37,7 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:17-jdk-buster
-    working_directory: ~/app/ms-dependencies
+    working_directory: ~/app/ms-common-web
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
@@ -47,14 +47,30 @@ jobs:
           path: ~/app
       - generate-maven-settings-file:
           settings-file: *maven-settings-file
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
       - run:
           name: Print Java Version
           command: java -version
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run:
+          name: Install Dependencies
+          command: mvn dependency:go-offline
       - snyk/scan:
           fail-on-issues: false
           monitor-on-build: true
           severity-threshold: low
           token-variable: SNYK_TOKEN
+      - run:
+          name: Test
+          command: mvn -ntp clean test
+      - run:
+          name: Quality Analysis
+          command: mvn -ntp -Psonar initialize sonar:sonar -Dsonar.login=$SONAR_TOKEN
       - run:
           name: Publish to GitHub Packages
           command: mvn --batch-mode deploy -Dgithub=true

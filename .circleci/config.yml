@@ -21,7 +21,7 @@ jobs:
           docker_layer_caching: true
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package-lock.json"" }}
+            - v1-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: Print Node Version
           command: node -v

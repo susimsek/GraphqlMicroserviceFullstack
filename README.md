@@ -239,6 +239,8 @@ https://auth.susimsek.github.io
 * Kubernetes
 * Helm
 * Sonarqube
+* Circleci
+* Snyk
 * Vault
 * Consul
 * Nginx

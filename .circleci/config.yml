@@ -61,7 +61,7 @@ jobs:
           name: Install Dependencies
           command: mvn dependency:go-offline
       - snyk/scan:
-          fail-on-issues: true
+          fail-on-issues: false
           monitor-on-build: true
           severity-threshold: low
           token-variable: SNYK_TOKEN

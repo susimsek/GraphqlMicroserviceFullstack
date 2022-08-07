@@ -1,0 +1,54 @@
+version: 2.1
+
+orbs:
+  snyk: snyk/snyk@1.2.3
+
+aliases:
+  - &maven-settings-file
+      "\"<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.1.0'
+              xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+            <servers>
+              <server>
+                   <id>github</id>
+                   <username>$GITHUB_USERNAME</username>
+                   <password>$GITHUB_PASSWORD</password>
+              </server>
+            </servers>
+          </settings>\""
+commands:
+  generate-maven-settings-file:
+    parameters:
+      settings-file:
+        type: string
+    steps:
+      - run:
+          name: Generate Maven Settings File
+          command: |
+            mkdir -p ~/.m2
+            echo -e << parameters.settings-file >> > ~/.m2/settings.xml
+
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:17-jdk-buster
+    working_directory: ~/app
+    environment:
+      # Customize the JVM maximum heap limit
+      MAVEN_OPTS: -Xmx3200m
+
+    steps:
+      - checkout
+      - generate-maven-settings-file:
+          settings-file: *maven-settings-file
+      - run:
+          name: Print Java Version
+          command: java -version
+      - snyk/scan:
+          fail-on-issues: false
+          monitor-on-build: true
+          severity-threshold: low
+          token-variable: SNYK_TOKEN
+      - run:
+          name: Publish to GitHub Packages
+          command: mvn --batch-mode deploy -Dgithub=true

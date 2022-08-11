@@ -3,6 +3,9 @@ package io.github.susimsek.product.graphql
 import io.github.susimsek.product.IntegrationTest
 import io.github.susimsek.product.model.Product
 import io.github.susimsek.product.repository.ProductRepository
+import io.github.susimsek.product.util.ProductCreator.DEFAULT_DESCRIPTION
+import io.github.susimsek.product.util.ProductCreator.DEFAULT_NAME
+import io.github.susimsek.product.util.ProductCreator.createEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -77,17 +80,5 @@ class ProductControllerIT {
             .errors()
             .satisfy { errors ->  assertThat(errors).hasSize(1)
                 assertThat(errors[0].errorType).isEqualTo(graphql.ErrorType.ValidationError)}
-    }
-
-    companion object {
-
-        private const val DEFAULT_ID = "ID"
-        private const val DEFAULT_NAME = "AAAAAAAAAA"
-        private const val DEFAULT_DESCRIPTION = "AAAAAAAAAA"
-
-        @JvmStatic
-        fun createEntity(): Product {
-            return Product(id = DEFAULT_ID, name = DEFAULT_NAME, description = DEFAULT_DESCRIPTION)
-        }
     }
 }

@@ -46,6 +46,8 @@
 		<testcontainers.version>1.17.3</testcontainers.version>
 		<querydsl.version>5.0.0</querydsl.version>
 		<mockito-kotlin.version>2.2.0</mockito-kotlin.version>
+		<ms-common-web.version>1.0.0</ms-common-web.version>
+		<ms-common-web-test.version>1.0.0</ms-common-web-test.version>
 	</properties>
 
 	<dependencyManagement>
@@ -100,6 +102,22 @@
 					<exclusion>
 						<groupId>ch.qos.logback</groupId>
 						<artifactId>logback-access</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>io.github.susimsek</groupId>
+				<artifactId>ms-common-web</artifactId>
+				<version>${ms-common-web.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.susimsek</groupId>
+				<artifactId>ms-common-web-test</artifactId>
+				<version>${ms-common-web-test.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework.security</groupId>
+						<artifactId>spring-security-oauth2-jose</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>

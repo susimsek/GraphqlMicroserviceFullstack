@@ -1,10 +1,10 @@
-package io.github.susimsek.product
+package io.github.susimsek.mscommonweb.test
 
 
 
-import io.github.susimsek.product.config.EmbeddedMongo
-import io.github.susimsek.product.config.EmbeddedRedis
-import io.github.susimsek.product.config.TestSecurityConfig
+import io.github.susimsek.mscommonweb.test.config.EmbeddedMongo
+import io.github.susimsek.mscommonweb.test.config.EmbeddedRedis
+import io.github.susimsek.mscommonweb.test.config.TestSecurityConfig
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-@SpringBootTest(classes = [ProductApplication::class, TestSecurityConfig::class])
+@SpringBootTest(classes = [TestSecurityConfig::class])
 @EmbeddedMongo
 @EmbeddedRedis
 @AutoConfigureHttpGraphQlTester

@@ -1,4 +1,4 @@
-package io.github.susimsek.product.config
+package io.github.susimsek.mscommonweb.test.config
 
 import org.slf4j.LoggerFactory
 import org.springframework.boot.test.util.TestPropertyValues

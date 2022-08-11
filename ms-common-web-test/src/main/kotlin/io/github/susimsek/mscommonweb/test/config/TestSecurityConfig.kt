@@ -1,4 +1,4 @@
-package io.github.susimsek.product.config
+package io.github.susimsek.mscommonweb.test.config
 
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.context.TestConfiguration

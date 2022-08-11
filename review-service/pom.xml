@@ -23,7 +23,6 @@
 		<dependency>
 			<groupId>io.github.susimsek</groupId>
 			<artifactId>ms-common-web</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -1,6 +1,7 @@
 package io.github.susimsek.product.graphql
 
-import io.github.susimsek.product.IntegrationTest
+
+import io.github.susimsek.mscommonweb.test.IntegrationTest
 import io.github.susimsek.product.model.Product
 import io.github.susimsek.product.repository.ProductRepository
 import io.github.susimsek.product.util.ProductCreator.DEFAULT_DESCRIPTION

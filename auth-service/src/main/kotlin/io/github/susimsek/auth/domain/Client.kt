@@ -1,11 +1,13 @@
 package io.github.susimsek.auth.domain
 
+import com.querydsl.core.annotations.QueryEntity
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
 import java.time.Clock
 import java.time.OffsetDateTime
 
+@QueryEntity
 @Document(collection = "oauth2_registered_client")
 data class Client(
 

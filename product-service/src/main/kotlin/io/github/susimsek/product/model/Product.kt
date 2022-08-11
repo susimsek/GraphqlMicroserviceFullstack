@@ -1,11 +1,13 @@
 package io.github.susimsek.product.model
 
+import com.querydsl.core.annotations.QueryEntity
 import io.github.susimsek.mscommonweb.mongo.model.audit.AbstractAuditingEntity
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.io.Serializable
 import java.util.UUID
 
+@QueryEntity
 @Document(collection = "product")
 data class Product(
     @Id

@@ -34,20 +34,16 @@ commands:
 
 jobs:
   build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:17-jdk-buster
+    machine:
+      image: ubuntu-2204:2022.07.1
+      docker_layer_caching: true
     working_directory: ~/repo/product-service
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
-
     steps:
       - checkout:
           path: ~/repo
-      - setup_remote_docker:
-          version: 20.10.14
-          docker_layer_caching: true
       - generate-maven-settings-file:
           settings-file: *maven-settings-file
       - restore_cache:
@@ -68,15 +64,6 @@ jobs:
           monitor-on-build: true
           severity-threshold: low
           token-variable: SNYK_TOKEN
-      - run:
-          name: Setup Environment Variables
-          command: |
-            echo "export TESTCONTAINERS_HOST_OVERRIDE=localhost" \
-            >> $BASH_ENV
-      - run:
-          name: Testcontainers tunnel
-          background: true
-          command: .circleci/autoforward.py
       - run:
           name: Test
           command: mvn -ntp clean verify

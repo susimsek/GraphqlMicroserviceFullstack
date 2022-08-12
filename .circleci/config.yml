@@ -69,6 +69,15 @@ jobs:
           severity-threshold: low
           token-variable: SNYK_TOKEN
       - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export TESTCONTAINERS_HOST_OVERRIDE=localhost" \
+            >> $BASH_ENV
+      - run:
+          name: Testcontainers tunnel
+          background: true
+          command: .circleci/autoforward.py
+      - run:
           name: Test
           command: mvn -ntp clean verify
       - run:

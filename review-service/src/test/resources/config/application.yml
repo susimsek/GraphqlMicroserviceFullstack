@@ -1,0 +1,23 @@
+server:
+  port: 10344
+  address: localhost
+
+logging:
+  use-json-format: false
+  logstash:
+    enabled: false
+    host: localhost
+    port: 5001
+    ring-buffer-size: 512
+
+spring:
+  cloud:
+    vault:
+      enabled: false
+    consul:
+      enabled: false
+
+command:
+  line:
+    runner:
+      enabled: false

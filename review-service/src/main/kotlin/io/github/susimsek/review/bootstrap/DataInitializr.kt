@@ -3,9 +3,14 @@ package io.github.susimsek.review.bootstrap
 import io.github.susimsek.review.model.Review
 import io.github.susimsek.review.service.ReviewService
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 
 @Component
+@ConditionalOnProperty(
+    value = ["command.line.runner.enabled"],
+    havingValue = "true",
+    matchIfMissing = true)
 internal class DataInitializr(private val reviewService: ReviewService) : CommandLineRunner {
 
     private val reviews = mutableListOf(

@@ -5,6 +5,7 @@ import io.github.susimsek.auth.domain.User
 import io.github.susimsek.auth.repository.OAuth2AuthorityRepository
 import io.github.susimsek.auth.repository.OAuth2UserRepository
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod
@@ -16,6 +17,10 @@ import org.springframework.security.oauth2.server.authorization.config.TokenSett
 import org.springframework.stereotype.Component
 
 @Component
+@ConditionalOnProperty(
+    value = ["command.line.runner.enabled"],
+    havingValue = "true",
+    matchIfMissing = true)
 internal class DataInitializr(private val oAuth2AuthorityRepository: OAuth2AuthorityRepository,
                               private val oAuth2UserRepository: OAuth2UserRepository,
                               private val passwordEncoder: PasswordEncoder,

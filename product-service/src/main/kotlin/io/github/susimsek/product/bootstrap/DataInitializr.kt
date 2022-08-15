@@ -3,10 +3,15 @@ package io.github.susimsek.product.bootstrap
 import io.github.susimsek.product.model.Product
 import io.github.susimsek.product.service.ProductService
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 
 @Component
+@ConditionalOnProperty(
+    value = ["command.line.runner.enabled"],
+    havingValue = "true",
+    matchIfMissing = true)
 internal class DataInitializr(private val productService: ProductService) : CommandLineRunner {
 
     override fun run(args: Array<String>) {

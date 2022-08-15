@@ -16,3 +16,8 @@ spring:
       enabled: false
     consul:
       enabled: false
+
+command:
+  line:
+    runner:
+      enabled: false

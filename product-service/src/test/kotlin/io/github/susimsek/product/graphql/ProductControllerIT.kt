@@ -41,6 +41,7 @@ class ProductControllerIT {
         graphQlTester
             .documentName("productsQuery")
             .execute()
+            .path("data.products[*]").entityList(Any::class.java).hasSize(1)
             .path("data.products[0].id").hasValue()
             .path("data.products[0].name").hasValue()
     }

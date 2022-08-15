@@ -125,7 +125,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    fun deleteAllProducts_shouldDeleteAllProductsAndReturnTrue() {
+    fun deleteAllProducts_shouldDeleteAllProducts() {
 
         `when`(productRepositoryMock.deleteAll()).thenReturn(Mono.empty())
 

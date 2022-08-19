@@ -17,7 +17,7 @@ class ReviewController(
         val productIds = products.map {it.id}.toMutableList()
         val result = reviewService.getReviewsByProductIdsIn(productIds)
         return result
-            .collectMultimap { it.productId!! }
+            .collectMultimap { it.productId }
             .map { m ->
                 productIds.associate { id ->
                     val key = products.find { id.equals(it.id) }!!

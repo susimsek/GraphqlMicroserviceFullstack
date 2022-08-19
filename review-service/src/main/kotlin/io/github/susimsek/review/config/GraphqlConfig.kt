@@ -8,15 +8,19 @@ import graphql.schema.DataFetchingEnvironment
 import graphql.schema.TypeResolver
 import graphql.schema.idl.RuntimeWiring
 import graphql.schema.idl.TypeDefinitionRegistry
+import io.github.susimsek.mscommonweb.graphql.GraphqlDateTimeAutoConfiguration
+import io.github.susimsek.mscommonweb.graphql.GraphqlExceptionResolverAutoConfiguration
 import io.github.susimsek.review.model.Product
 import io.github.susimsek.review.model.Product.Companion.PRODUCT_TYPE
 import org.springframework.boot.autoconfigure.graphql.GraphQlSourceBuilderCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.graphql.execution.GraphQlSource.SchemaResourceBuilder
 import java.util.stream.Collectors
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
+@Import(value = [GraphqlDateTimeAutoConfiguration::class, GraphqlExceptionResolverAutoConfiguration::class])
 class GraphqlConfig {
 
     @Bean

@@ -21,10 +21,10 @@ spring:
         jwt:
           issuer-uri: http://localhost:9000
   redis:
-    host: localhost
-    port: 6379
+    host: redis-11596.c240.us-east-1-3.ec2.cloud.redislabs.com
+    port: 11596
     database: 0
-    password: d41d8cd98f00b204e9800998ecf8427e
+    password: G9Ny5o87hnEpO9RiRQeYHUNFFl8vDSP3
 
   cache:
     expiration: 5m

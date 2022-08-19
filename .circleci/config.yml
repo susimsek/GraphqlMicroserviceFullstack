@@ -19,13 +19,8 @@ aliases:
                     <username>$DOCKER_REGISTRY_USERNAME</username>
                     <password>$DOCKER_REGISTRY_PASSWORD</password>
               </server>
-              <server>
-                    <id>registry.heroku.com</id>
-                    <username>$HEROKU_USERNAME</username>
-                    <password>$HEROKU_API_KEY</password>
-              </server>
             </servers>
-        </settings>\""
+          </settings>\""
 commands:
   generate-maven-settings-file:
     parameters:

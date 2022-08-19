@@ -19,7 +19,7 @@ aliases:
                     <password>$DOCKER_REGISTRY_PASSWORD</password>
               </server>
             </servers>
-        </settings>\""
+          </settings>\""
 commands:
   generate-maven-settings-file:
     parameters:

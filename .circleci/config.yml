@@ -31,7 +31,6 @@ commands:
           command: |
             mkdir -p ~/.m2
             echo -e << parameters.settings-file >> > ~/.m2/settings.xml
-
 jobs:
   build:
     machine:

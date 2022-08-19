@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   snyk: snyk/snyk@1.2.3
+  heroku: circleci/heroku@1.2.6
 
 aliases:
   - &maven-settings-file
@@ -18,7 +19,11 @@ aliases:
                     <username>$DOCKER_REGISTRY_USERNAME</username>
                     <password>$DOCKER_REGISTRY_PASSWORD</password>
               </server>
-            </servers>
+              <server>
+                    <id>registry.heroku.com</id>
+                    <username>$HEROKU_USERNAME</username>
+                    <password>$HEROKU_API_KEY</password>
+              </server>
           </settings>\""
 commands:
   generate-maven-settings-file:
@@ -75,4 +80,4 @@ jobs:
           command: mvn -ntp -Psonar initialize sonar:sonar -Dsonar.login=$SONAR_TOKEN
       - run:
           name: Publish Docker
-          command: mvn -ntp -Pjib jib:build -DskipTests
+          command: mvn -ntp -Pjib jib:build -DskipTests -Ddocker.image.name=registry.heroku.com/$HEROKU_APP_NAME/web

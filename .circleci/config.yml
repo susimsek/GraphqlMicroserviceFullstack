@@ -9,19 +9,19 @@ aliases:
       xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.2.0 http://maven.apache.org/xsd/settings-1.2.0.xsd'>
       <servers>
       <server>
+      <id>github</id>
       <username>$GITHUB_USERNAME</username>
       <password>$GITHUB_PASSWORD</password>
-      <id>github</id>
       </server>
       <server>
+      <id>registry-1.docker.io</id>
       <username>$DOCKER_REGISTRY_USERNAME</username>
       <password>$DOCKER_REGISTRY_PASSWORD</password>
-      <id>registry-1.docker.io</id>
       </server>
       <server>
+      <id>registry.heroku.com</id>
       <username>$HEROKU_USERNAME</username>
       <password>$HEROKU_API_KEY</password>
-      <id>registry.heroku.com</id>
       </server>
       </servers>
       </settings>\""

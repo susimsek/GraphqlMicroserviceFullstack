@@ -5,20 +5,21 @@ orbs:
 
 aliases:
   - &maven-settings-file
-      "\"<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.1.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
-            <servers>
-              <server>
-                <id>github</id>
-                <username>$GITHUB_USERNAME</username>
-                <password>$GITHUB_PASSWORD</password>
-              </server>
-              <server>
-                <id>registry-1.docker.io</id>
-                <username>$DOCKER_REGISTRY_USERNAME</username>
-                <password>$DOCKER_REGISTRY_PASSWORD</password>
-              </server>
-            </servers>
-          </settings>\""
+      "\"<settings xmlns='http://maven.apache.org/SETTINGS/1.2.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+      xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.2.0 http://maven.apache.org/xsd/settings-1.2.0.xsd'>
+        <servers>
+          <server>
+            <id>github</id>
+            <username>$GITHUB_USERNAME</username>
+            <password>$GITHUB_PASSWORD</password>
+          </server>
+          <server>
+            <id>registry-1.docker.io</id>
+            <username>$DOCKER_REGISTRY_USERNAME</username>
+            <password>$DOCKER_REGISTRY_PASSWORD</password>
+          </server>
+      </servers>
+      </settings>\""
 commands:
   generate-maven-settings-file:
     parameters:

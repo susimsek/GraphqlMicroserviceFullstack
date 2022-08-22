@@ -43,12 +43,13 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:17-jdk-buster
-    working_directory: ~/repo
+    working_directory: ~/repo/auth-service
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
     steps:
-      - checkout
+      - checkout:
+          path: ~/repo
       - generate-maven-settings-file:
           settings-file: *maven-settings-file
       - run:

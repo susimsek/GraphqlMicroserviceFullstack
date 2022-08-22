@@ -85,8 +85,12 @@ jobs:
   deploy:
     executor: heroku/default
     steps:
+      - setup_remote_docker:
+          version: 20.10.14
       - heroku/install
       - heroku/release-docker-image:
+          api-key: HEROKU_API_KEY
+          app-name: $HEROKU_APP_NAME
           process-types: web
 
 workflows:

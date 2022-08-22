@@ -2,29 +2,6 @@ version: 2.1
 
 orbs:
   snyk: snyk/snyk@1.2.3
-
-aliases:
-  - &maven-settings-file
-      "\"<settings xmlns='http://maven.apache.org/SETTINGS/1.2.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-      xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.2.0 http://maven.apache.org/xsd/settings-1.2.0.xsd'>
-      <servers>
-      <server>
-      <id>github</id>
-      <username>$GITHUB_USERNAME</username>
-      <password>$GITHUB_PASSWORD</password>
-      </server>
-      <server>
-      <id>registry-1.docker.io</id>
-      <username>$DOCKER_REGISTRY_USERNAME</username>
-      <password>$DOCKER_REGISTRY_PASSWORD</password>
-      </server>
-      <server>
-      <id>registry.heroku.com</id>
-      <username>$HEROKU_USERNAME</username>
-      <password>$HEROKU_API_KEY</password>
-      </server>
-      </servers>
-      </settings>\""
 commands:
   generate-maven-settings-file:
     parameters:
@@ -35,8 +12,7 @@ commands:
           name: Generate Maven Settings File
           command: |
             mkdir -p ~/.m2
-            echo -e << parameters.settings-file >> > ~/.m2/settings.xml
-
+            copy ./.circleci/.circleci.settings.xml ~/.m2/settings.xml
 jobs:
   build:
     machine:
@@ -49,8 +25,7 @@ jobs:
     steps:
       - checkout:
           path: ~/repo
-      - generate-maven-settings-file:
-          settings-file: *maven-settings-file
+      - generate-maven-settings-file
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}

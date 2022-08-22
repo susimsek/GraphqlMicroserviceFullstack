@@ -9,7 +9,7 @@ commands:
           name: Generate Maven Settings File
           command: |
             mkdir -p ~/.m2
-            cp ./.circleci/.circleci.settings.xml ~/.m2/settings.xml
+            cp .circleci/.circleci.settings.xml ~/.m2/settings.xml
 jobs:
   build:
     machine:

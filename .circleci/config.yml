@@ -83,6 +83,7 @@ jobs:
           name: Publish Docker
           command: mvn -ntp -Pjib jib:build -DskipTests -Ddocker.image.name=registry.heroku.com/$HEROKU_APP_NAME/web
   deploy:
+    executor: heroku/default
     steps:
       - release-docker-image:
           api-key: HEROKU_API_KEY

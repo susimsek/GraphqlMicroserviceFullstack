@@ -85,10 +85,9 @@ jobs:
   deploy:
     executor: heroku/default
     steps:
-      - release-docker-image:
-          api-key: HEROKU_API_KEY
-          app-name: $HEROKU_APP_NAME
-
+      - heroku/install
+      - heroku/release-docker-image:
+          process-types: web
 
 workflows:
   build-and-deploy:

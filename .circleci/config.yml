@@ -4,9 +4,6 @@ orbs:
   snyk: snyk/snyk@1.2.3
 commands:
   generate-maven-settings-file:
-    parameters:
-      settings-file:
-        type: string
     steps:
       - run:
           name: Generate Maven Settings File

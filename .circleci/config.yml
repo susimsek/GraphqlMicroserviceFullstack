@@ -50,6 +50,9 @@ jobs:
     steps:
       - checkout:
           path: ~/repo
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
       - generate-maven-settings-file:
           settings-file: *maven-settings-file
       - run:

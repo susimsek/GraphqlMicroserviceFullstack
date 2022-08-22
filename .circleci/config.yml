@@ -2,27 +2,55 @@ version: 2.1
 
 orbs:
   snyk: snyk/snyk@1.2.3
+  heroku: circleci/heroku@1.2.6
+
+aliases:
+  - &maven-settings-file
+      "\"<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.1.0'
+              xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+            <servers>
+              <server>
+                   <id>github</id>
+                   <username>$GITHUB_USERNAME</username>
+                   <password>$GITHUB_PASSWORD</password>
+              </server>
+              <server>
+                    <id>registry-1.docker.io</id>
+                    <username>$DOCKER_REGISTRY_USERNAME</username>
+                    <password>$DOCKER_REGISTRY_PASSWORD</password>
+              </server>
+              <server>
+                    <id>registry.heroku.com</id>
+                    <username>$HEROKU_USERNAME</username>
+                    <password>$HEROKU_API_KEY</password>
+              </server>
+            </servers>
+          </settings>\""
 commands:
   generate-maven-settings-file:
+    parameters:
+      settings-file:
+        type: string
     steps:
       - run:
           name: Generate Maven Settings File
           command: |
             mkdir -p ~/.m2
-            cp .circleci/.circleci.settings.xml ~/.m2/settings.xml
+            echo -e << parameters.settings-file >> > ~/.m2/settings.xml
+
 jobs:
   build:
-    machine:
-      image: ubuntu-2204:2022.07.1
-      docker_layer_caching: true
-    working_directory: ~/repo/auth-service
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:17-jdk-buster
+    working_directory: ~/repo
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
     steps:
-      - checkout:
-          path: ~/repo
-      - generate-maven-settings-file
+      - checkout
+      - generate-maven-settings-file:
+          settings-file: *maven-settings-file
       - run:
           name: Print Java Version
           command: java -version
@@ -40,7 +68,7 @@ jobs:
           token-variable: SNYK_TOKEN
       - run:
           name: Test
-          command: mvn -ntp clean verify
+          command: mvn -ntp clean test
       - run:
           name: Packaging
           command: mvn -ntp package -DskipTests
@@ -49,4 +77,4 @@ jobs:
           command: mvn -ntp -Psonar initialize sonar:sonar -Dsonar.login=$SONAR_TOKEN
       - run:
           name: Publish Docker
-          command: mvn -ntp -Pjib jib:build -DskipTests
+          command: mvn -ntp -Pjib jib:build -DskipTests -Ddocker.image.name=registry.heroku.com/$HEROKU_APP_NAME/web

@@ -23,9 +23,6 @@ jobs:
       - checkout:
           path: ~/repo
       - generate-maven-settings-file
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
       - run:
           name: Print Java Version
           command: java -version

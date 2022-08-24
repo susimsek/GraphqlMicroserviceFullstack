@@ -20,8 +20,11 @@ We are oauth2 authorization server using to secure the application.
 
 To log in to your app, you'll need to have Spring OAuth2 Authorization Server up and running.
 
-The OAuth2 Authorization Server can be accessed from this link.  
+The OAuth2 Authorization Server can be accessed from this link via kubernetes.  
 https://auth.susimsek.github.io
+
+The OAuth2 Authorization Server can be accessed from this link via heroku.  
+https://graphql-fullstack-auth-service.herokuapp.com
 
 The default user credentials information is as follows. 
 You can log in to the authorization server using that credential information or login to the authorization server with gmail.
@@ -239,6 +242,7 @@ https://auth.susimsek.github.io
 * Kubernetes
 * Helm
 * Sonarqube
+* Heroku(only Authorization Server)
 * Circleci
 * Snyk
 * Vault

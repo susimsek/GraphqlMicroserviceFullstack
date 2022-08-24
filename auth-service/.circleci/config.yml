@@ -47,14 +47,13 @@ jobs:
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
-
     steps:
       - checkout
-      - generate-maven-settings-file:
-          settings-file: *maven-settings-file
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
+      - generate-maven-settings-file:
+          settings-file: *maven-settings-file
       - run:
           name: Print Java Version
           command: java -version
@@ -82,3 +81,27 @@ jobs:
       - run:
           name: Publish Docker
           command: mvn -ntp -Pjib jib:build -DskipTests -Ddocker.image.name=registry.heroku.com/$HEROKU_APP_NAME/web
+  deploy:
+    executor: heroku/default
+    steps:
+      - setup_remote_docker:
+          version: 20.10.14
+      - heroku/install
+      - heroku/release-docker-image:
+          api-key: HEROKU_API_KEY
+          app-name: $HEROKU_APP_NAME
+          process-types: web
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: main
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main

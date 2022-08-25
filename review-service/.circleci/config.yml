@@ -43,11 +43,11 @@ jobs:
       MAVEN_OPTS: -Xmx3200m
     steps:
       - checkout
-      - generate-maven-settings-file:
-          settings-file: *maven-settings-file
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
+      - generate-maven-settings-file:
+          settings-file: *maven-settings-file
       - run:
           name: Print Java Version
           command: java -version

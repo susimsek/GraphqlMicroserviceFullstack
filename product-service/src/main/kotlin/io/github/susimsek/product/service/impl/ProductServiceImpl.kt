@@ -16,7 +16,7 @@ class ProductServiceImpl(
 
     override fun getProduct(id: String): Mono<Product> {
         return productRepository.findById(id)
-            .switchIfEmpty(Mono.error((ResourceNotFoundException("Product with id $id not found"))))
+            .switchIfEmpty(Mono.error((ResourceNotFoundException("Product", "id", id))))
     }
 
     override fun saveProduct(product: Product): Mono<Product> {

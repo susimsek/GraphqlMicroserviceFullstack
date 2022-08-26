@@ -193,7 +193,7 @@ You can uninstall app the following bash command
 The Fullstack GraphQL App be accessed with nginx from the link below.  
 http://127.0.0.1
 
-The OAuth2 Authorization Server be accessed with from the link below.  
+The OAuth2 Authorization Server be accessed from the link below.  
 http://127.0.0.1:9000
 
 

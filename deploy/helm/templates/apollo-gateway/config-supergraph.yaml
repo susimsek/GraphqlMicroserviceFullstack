@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supergraph-config
+  labels:
+  {{- include "apollo-gateway.labels" . | nindent 4 }}
+data:
+  supergraph.graphql: |-
+{{ .Files.Get "config/supergraph.graphql" | indent 4 }}

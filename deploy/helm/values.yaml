@@ -52,8 +52,13 @@ apolloGateway:
       scheme: HTTP
   customLivenessProbe: { }
   customReadinessProbe: { }
-  extraVolumeMounts: [ ]
-  extraVolumes: [ ]
+  extraVolumeMounts:
+    - name: supergraph-volume
+      mountPath: /etc/config
+  extraVolumes:
+    - name: supergraph-volume
+      configMap:
+        name: supergraph-config
 
 web:
   replicaCount: 1

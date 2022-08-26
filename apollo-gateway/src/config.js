@@ -40,6 +40,8 @@ const initConfig = async () => {
     return {
         NODE_ENV: process.env.NODE_ENV || 'development',
         PORT: config.PORT || 4000,
+        APOLLO_SCHEMA_CONFIG_EMBEDDED: config.APOLLO_SCHEMA_CONFIG_EMBEDDED || true,
+        SUPERGRAPH_PATH: config.SUPERGRAPH_PATH || "../deploy/supergraph.graphql",
         CORS_ALLOWED_ORIGINS: config.CORS_ALLOWED_ORIGINS || 'http://localhost:3000, http://127.0.0.1:3000, https://studio.apollographql.com',
         CORS_ALLOW_CREDENTIALS: process.env.CORS_ALLOW_CREDENTIALS || true,
         ACL_TOKEN: config.CONSUL_ACL_TOKEN || '',

@@ -1,0 +1,9 @@
+subgraphs:
+  products:
+    routing_url: http://product-service:8081/graphql
+    schema:
+      file: ./product-service/src/main/resources/graphql/schema.graphqls
+  reviews:
+    routing_url: http://review-service:8082/graphql
+    schema:
+      file: ./review-service/src/main/resources/graphql/schema.graphqls

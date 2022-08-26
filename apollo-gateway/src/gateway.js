@@ -1,31 +1,33 @@
 const { ApolloServer } = require('apollo-server');
 const { ApolloGateway, RemoteGraphQLDataSource, IntrospectAndCompose} = require('@apollo/gateway');
+const { readFileSync } = require('fs');
 
 
 const {initConfig} = require("./config");
 const {initConsul, registerService, getServiceList, unregisterService} = require("./consul");
 
-
 initConfig().then(config => {
-    let servers = [];
-    if (process.env.NODE_ENV === 'development') {
-        servers = [
-            { name: 'product', url: 'http://localhost:8081/graphql' },
-            { name: 'review', url: 'http://localhost:8082/graphql' },
-        ]
-        startGateway(config, servers)
-    } else {
+    if (process.env.NODE_ENV !== 'development') {
         initConsul(config)
-        getServiceList((err, services) => {
-            if (err) throw err;
-            servers = Object.keys(services)
-                .filter(id => (services[id].Tags.indexOf('graphql') > -1))
-                .map(id => {
-                    return { name: services[id].Service.replaceAll('-service', ''), url: `http://${services[id].Address}:${services[id].Port}/graphql` }
-                });
-            startGateway(config, servers)
-        });
     }
+
+    const apolloGatewayConfig = {
+        buildService({name, url}) {
+            return new AuthenticatedDataSource({url});
+        }
+    };
+
+    const embeddedSchema = config.APOLLO_SCHEMA_CONFIG_EMBEDDED
+
+    if (embeddedSchema){
+        const supergraph = config.SUPERGRAPH_PATH
+        apolloGatewayConfig['supergraphSdl'] = readFileSync(supergraph).toString();
+        console.log('Starting Apollo Gateway in local mode ...');
+        console.log(`Using local: ${supergraph}`)
+    } else {
+        console.log('Starting Apollo Gateway in managed mode ...');
+    }
+    startGateway(config, apolloGatewayConfig)
 }).catch(err => {
     console.log(err);
 });
@@ -36,20 +38,13 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
     }
 }
 
-const startGateway = (config, servers) => {
+const startGateway = (config, apolloGatewayConfig) => {
     const corsOptions = {
         origin: config.CORS_ALLOWED_ORIGINS.split(", "),
         credentials: config.CORS_ALLOW_CREDENTIALS
     }
 
-    const gateway = new ApolloGateway({
-        supergraphSdl: new IntrospectAndCompose({
-            subgraphs: servers,
-        }),
-        buildService({name, url}) {
-            return new AuthenticatedDataSource({url});
-        },
-    });
+    const gateway = new ApolloGateway(apolloGatewayConfig);
 
     const server = new ApolloServer({
         gateway,
@@ -81,6 +76,6 @@ const startGateway = (config, servers) => {
     server.listen({
         port: config.PORT,
     }).then(({ url }) => {
-        console.log(`🚀 Server ready at ${url}`);
+        console.log(`🚀 Graph Router ready at ${url}`);
     });
 }

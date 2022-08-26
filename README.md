@@ -184,7 +184,7 @@ You can deploy app by running the following bash command
  ./deploy.sh -d
 ```
 
-You can uninstall native graphql api the following bash command
+You can uninstall app the following bash command
 
 ```sh
  ./deploy.sh -d -r
@@ -214,13 +214,13 @@ You can deploy app by running the following bash command
  ./deploy.sh -k
 ```
 
-You can uninstall native graphql api the following bash command
+You can uninstall app the following bash command
 
 ```sh
  ./deploy.sh -k -r
 ```
 
-You can upgrade the Fullstack GraphQL App (if you have made any changes to the generated manifests) by running the
+You can upgrade the App (if you have made any changes to the generated manifests) by running the
 following bash command
 
 ```sh

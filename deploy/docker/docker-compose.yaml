@@ -80,7 +80,7 @@ services:
     ports:
       - "4000:4000"
     volumes:
-      - ../supergraph.graphql:/etc/config/supergraph.graphql
+      - ./config/supergraph.graphql:/etc/config/supergraph.graphql
 
   auth-service:
     image: suayb/auth-service:latest

@@ -11,6 +11,6 @@ data:
   {{- end }}
   {{- end }}
   PORT: '3000'
-  AUTH_SERVER_URL: https://auth.susimsek.github.io
+  AUTH_SERVER_URL: http://auth.susimsek.github.io
   OAUTH2_CLIENT_ID: web-client
   OAUTH2_CLIENT_SECRET: '123456'

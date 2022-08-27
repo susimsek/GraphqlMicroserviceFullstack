@@ -71,6 +71,9 @@ spec:
             - configMapRef:
                 name: apollo-gateway-configmap
           volumeMounts:
+            - name: supergraph-volume
+              mountPath: {{ .Values.apolloGateway.supergraph.path }}
+              subPath: supergraph.graphql
           {{- if .Values.apolloGateway.extraVolumeMounts }}
           {{- toYaml .Values.apolloGateway.extraVolumeMounts | nindent 12 }}
       {{- end }}
@@ -78,9 +81,13 @@ spec:
       initContainers:
       {{ tpl .Values.apolloGateway.extraInitContainers . | indent 8 }}
       {{- end }}
-      {{- if .Values.apolloGateway.extraVolumes }}
       volumes:
+        - name: supergraph-volume
+          configMap:
+            name: supergraph-config
+            items:
+              - key: supergraph.graphql
+                path: supergraph.graphql
       {{- if .Values.apolloGateway.extraVolumes }}
       {{- toYaml .Values.apolloGateway.extraVolumes | nindent 8 }}
-  {{- end }}
   {{- end }}

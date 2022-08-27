@@ -78,9 +78,7 @@ spec:
       initContainers:
       {{ tpl .Values.productService.extraInitContainers . | indent 8 }}
       {{- end }}
-      {{- if .Values.productService.extraVolumes }}
       volumes:
       {{- if .Values.productService.extraVolumes }}
       {{- toYaml .Values.productService.extraVolumes | nindent 8 }}
-  {{- end }}
   {{- end }}

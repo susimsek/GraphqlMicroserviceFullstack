@@ -21,7 +21,7 @@ We are oauth2 authorization server using to secure the application.
 To log in to your app, you'll need to have Spring OAuth2 Authorization Server up and running.
 
 The OAuth2 Authorization Server can be accessed from this link via kubernetes.  
-https://auth.susimsek.github.io
+http://auth.susimsek.github.io
 
 The OAuth2 Authorization Server can be accessed from this link via heroku.  
 https://graphql-fullstack-auth-service.herokuapp.com
@@ -38,7 +38,7 @@ password: password
 # Application
 
 The GraphQL Fullstack application can be accessed from this link.  
-https://gqlmsweb.susimsek.github.io
+http://gqlmsweb.susimsek.github.io
 
 ## Dashboard
 <img src="https://github.com/susimsek/GraphqlMicroserviceFullstack/blob/main/images/ui-dashboard.png" alt="Graphql Fullstack Microservice App Dashboard" width="100%" height="100%"/>   
@@ -74,6 +74,19 @@ You can run the spring boot microservice by typing the following command
 ```sh
 mvn spring-boot:run
 ```
+
+### Supergraph Composition
+
+## Prerequisites
+
+* Rover
+
+You can federate multiple subgraphs into a supergraph by typing the following command
+
+```sh
+rover supergraph compose --config ./deploy/supergraph.yaml > ./deploy/supergraph.graphql
+```
+
 
 ### Run the apollo gateway
 
@@ -228,10 +241,10 @@ following bash command
 ```
 
 The Fullstack GraphQL App be accessed with ingress from the link below.(default nginx ingress)  
-https://gqlmsweb.susimsek.github.io
+http://gqlmsweb.susimsek.github.io
 
 The OAuth2 Authorization Server be accessed with ingress from the link below. (default nginx ingress)  
-https://auth.susimsek.github.io
+http://auth.susimsek.github.io
 
 # Used Technologies
 ## Backend Side

@@ -10,6 +10,8 @@ serviceAccount:
   name: internal-app
 
 apolloGateway:
+  supergraph:
+    path: /etc/config/supergraph.graphql
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -52,13 +54,8 @@ apolloGateway:
       scheme: HTTP
   customLivenessProbe: { }
   customReadinessProbe: { }
-  extraVolumeMounts:
-    - name: supergraph-volume
-      mountPath: /etc/config
-  extraVolumes:
-    - name: supergraph-volume
-      configMap:
-        name: supergraph-config
+  extraVolumeMounts: []
+  extraVolumes: []
 
 web:
   replicaCount: 1

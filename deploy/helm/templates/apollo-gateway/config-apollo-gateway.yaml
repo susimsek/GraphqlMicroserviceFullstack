@@ -10,8 +10,6 @@ data:
   {{ $key }}: {{ $val | quote }}
   {{- end }}
   {{- end }}
-  supergraph.graphql: |-
-{{ .Files.Get "../supergraph.graphql" | nindent 4 }}
-  VAULT_URI: http://vault:8200
-  VAULT_AUTHENTICATION: KUBERNETES
-  KUBERNETES_ROLE: internal-app
+  VAULT_URI: {{ .Values.vault.uri }}
+  VAULT_AUTHENTICATION: {{ .Values.vault.authentication }}
+  KUBERNETES_ROLE: {{ .Values.vault.kubernetesRole }}

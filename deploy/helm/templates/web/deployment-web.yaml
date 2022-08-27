@@ -68,6 +68,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: web-configmap
+            - secretRef:
+                name: oauth2-client-secret
           volumeMounts:
           {{- if .Values.web.extraVolumeMounts }}
           {{- toYaml .Values.web.extraVolumeMounts | nindent 12 }}

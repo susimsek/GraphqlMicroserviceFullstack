@@ -10,7 +10,7 @@ data:
   {{ $key }}: {{ $val | quote }}
   {{- end }}
   {{- end }}
-  SPRING_PROFILES_ACTIVE: prod
-  SPRING_CLOUD_VAULT_URI: http://vault:8200
-  SPRING_CLOUD_VAULT_AUTHENTICATION: KUBERNETES
-  SPRING_CLOUD_VAULT_KUBERNETES_ROLE: internal-app
+  SPRING_PROFILES_ACTIVE: {{ .Values.spring.profiles.active }}
+  SPRING_CLOUD_VAULT_URI: {{ .Values.vault.uri }}
+  SPRING_CLOUD_VAULT_AUTHENTICATION: {{ .Values.vault.authentication }}
+  SPRING_CLOUD_VAULT_KUBERNETES_ROLE: {{ .Values.vault.kubernetesRole }}

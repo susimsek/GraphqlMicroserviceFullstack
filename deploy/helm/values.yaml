@@ -6,6 +6,15 @@ global:
       maxSurge: 1
   imagePullSecrets: []
 
+spring:
+  profiles:
+    active: prod
+
+vault:
+  uri: http://vault:8200
+  authentication: KUBERNETES
+  kubernetesRole: internal-app
+
 serviceAccount:
   name: internal-app
 
@@ -58,6 +67,10 @@ apolloGateway:
   extraVolumes: []
 
 web:
+  auth:
+    serverUrl: http://auth.susimsek.github.io
+    clientId: web-client
+    clientSecret: '123456'
   replicaCount: 1
   containerPorts:
     http: 3000

@@ -14,7 +14,7 @@ As an alternative to REST, GraphQL lets developers construct requests that pull 
 single API call.
 
 # OAuth2 Authorization Server
-We are oauth2 authorization server using to secure the application.
+We are using oauth2 authorization server to secure the application.
 
 <img src="https://github.com/susimsek/GraphqlMicroserviceFullstack/blob/main/images/auth-server.png" alt="Spring Boot Authorization Server" width="100%" height="100%"/>
 

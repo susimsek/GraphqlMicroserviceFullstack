@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require("fs");
 
 dotenv.config({
-    path: path.resolve(__dirname, `${process.env.NODE_ENV}.env`)
+    path: path.resolve(__dirname, `../${process.env.NODE_ENV}.env`)
 });
 
 

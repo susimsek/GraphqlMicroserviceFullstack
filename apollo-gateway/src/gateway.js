@@ -19,7 +19,7 @@ initConfig().then(config => {
 
     const embeddedSchema = config.APOLLO_SCHEMA_CONFIG_EMBEDDED
 
-    if (embeddedSchema){
+    if (embeddedSchema === 'true'){
         const supergraph = config.SUPERGRAPH_PATH
         apolloGatewayConfig['supergraphSdl'] = readFileSync(supergraph).toString();
         console.log('Starting Apollo Gateway in local mode ...');

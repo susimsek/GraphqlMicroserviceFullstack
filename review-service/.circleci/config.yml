@@ -73,5 +73,19 @@ jobs:
           name: Quality Analysis
           command: mvn -ntp -Psonar initialize sonar:sonar -Dsonar.login=$SONAR_TOKEN
       - run:
+          name: Install Rover
+          command: |
+            # download and install Rover
+            curl -sSL https://rover.apollo.dev/nix/v0.8.1 | sh
+
+            # This allows the PATH changes to persist to the next `run` step
+            echo 'export PATH=$HOME/.rover/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: Rover Check Subgraph
+          command: rover subgraph check $APOLLO_GRAPH_REF --schema src/main/resources/graphql/schema.graphqls --name $APOLLO_SUBGRAPH_NAME
+      - run:
+          name: Rover Publish Subgraph
+          command: rover subgraph publish $APOLLO_GRAPH_REF --routing-url $APOLLO_SUBGRAPH_ROUTING_URL --schema src/main/resources/graphql/schema.graphqls --name $APOLLO_SUBGRAPH_NAME
+      - run:
           name: Publish Docker
           command: mvn -ntp -Pjib jib:build -DskipTests

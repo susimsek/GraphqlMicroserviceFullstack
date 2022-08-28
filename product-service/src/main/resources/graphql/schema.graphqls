@@ -9,6 +9,5 @@ type Product @key(fields: "id") {
     id: ID!
     name: String!
     description: String,
-    description2: String,
     createdDate: OffsetDateTime!
 }

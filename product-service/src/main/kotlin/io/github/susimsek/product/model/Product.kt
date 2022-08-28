@@ -13,8 +13,7 @@ data class Product(
     @Id
     var id: String = UUID.randomUUID().toString(),
     var name: String? = null,
-    var description: String? = null,
-    var description2: String? = description
+    var description: String? = null
 ): AbstractAuditingEntity(), Serializable {
     companion object {
         private const val serialVersionUID = 1L

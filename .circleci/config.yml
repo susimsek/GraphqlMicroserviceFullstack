@@ -42,14 +42,6 @@ jobs:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
     steps:
-      - run:
-          name: Install Rover
-          command: |
-            # download and install Rover
-            curl -sSL https://rover.apollo.dev/nix/v0.8.1 | sh
-            
-            # This allows the PATH changes to persist to the next `run` step
-            echo 'export PATH=$HOME/.rover/bin:$PATH' >> $BASH_ENV
       - checkout:
           path: ~/repo
       - restore_cache:
@@ -81,6 +73,14 @@ jobs:
       - run:
           name: Quality Analysis
           command: mvn -ntp -Psonar initialize sonar:sonar -Dsonar.login=$SONAR_TOKEN
+      - run:
+          name: Install Rover
+          command: |
+            # download and install Rover
+            curl -sSL https://rover.apollo.dev/nix/v0.8.1 | sh
+
+            # This allows the PATH changes to persist to the next `run` step
+            echo 'export PATH=$HOME/.rover/bin:$PATH' >> $BASH_ENV
       - run:
           name: Rover Check Subgraph
           command: rover subgraph check $APOLLO_GRAPH_REF --schema src/main/resources/graphql/schema.graphqls --name $APOLLO_SUBGRAPH_NAME

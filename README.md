@@ -255,6 +255,7 @@ http://auth.susimsek.github.io
 * Kubernetes
 * Helm
 * Sonarqube
+* Detekt
 * Heroku(only Authorization Server)
 * Circleci
 * Snyk

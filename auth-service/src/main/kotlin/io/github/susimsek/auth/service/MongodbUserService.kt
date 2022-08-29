@@ -8,7 +8,6 @@ import org.springframework.dao.DataRetrievalFailureException
 import org.springframework.stereotype.Service
 import java.util.Optional
 
-
 @Service
 class MongodbUserService(
     private val authorityRepository: OAuth2AuthorityRepository,
@@ -17,8 +16,11 @@ class MongodbUserService(
 
     fun registerOauth2User(user: OAuth2UserInfo) {
         val authorityName = "ROLE_USER"
-        val authority = authorityRepository.findByName(authorityName).orElseThrow{ DataRetrievalFailureException(
-            "The Authority with name '$authorityName' was not found in the RegisteredClientRepository.") }
+        val authority = authorityRepository.findByName(authorityName).orElseThrow {
+            DataRetrievalFailureException(
+            "The Authority with name '$authorityName' was not found in the RegisteredClientRepository."
+            )
+        }
         val newUser = User(
             email = user.email!!,
             authorities = mutableSetOf(authority)

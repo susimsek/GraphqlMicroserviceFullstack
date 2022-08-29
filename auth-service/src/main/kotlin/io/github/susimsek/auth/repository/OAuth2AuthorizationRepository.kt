@@ -6,5 +6,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor
 import org.springframework.stereotype.Repository
 
 @Repository
-interface OAuth2AuthorizationRepository : MongoRepository<Authorization, String>, OAuth2AuthorizationRepositoryOverride,
+interface OAuth2AuthorizationRepository :
+    MongoRepository<Authorization, String>,
+    OAuth2AuthorizationRepositoryOverride,
     QuerydslPredicateExecutor<Authorization>

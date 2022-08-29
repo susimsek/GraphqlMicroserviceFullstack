@@ -30,7 +30,6 @@ class ClientMapper {
         objectMapper.registerModule(OAuth2AuthorizationServerJackson2Module())
     }
 
-
     fun toClient(registeredClient: RegisteredClient): Client {
 
         val clientIdIssuedAt: OffsetDateTime = if (registeredClient.clientIdIssuedAt != null) {
@@ -46,17 +45,21 @@ class ClientMapper {
         }
 
         val clientAuthenticationMethods: MutableSet<String> = mutableSetOf()
-        registeredClient.clientAuthenticationMethods.forEach(Consumer { clientAuthenticationMethod: ClientAuthenticationMethod ->
+        registeredClient.clientAuthenticationMethods.forEach(
+            Consumer { clientAuthenticationMethod: ClientAuthenticationMethod ->
             clientAuthenticationMethods.add(
                 clientAuthenticationMethod.value
             )
-        })
+        }
+        )
         val authorizationGrantTypes: MutableSet<String> = mutableSetOf()
-        registeredClient.authorizationGrantTypes.forEach(Consumer { authorizationGrantType: AuthorizationGrantType ->
+        registeredClient.authorizationGrantTypes.forEach(
+            Consumer { authorizationGrantType: AuthorizationGrantType ->
             authorizationGrantTypes.add(
                 authorizationGrantType.value
             )
-        })
+        }
+        )
 
         return Client(
             id = registeredClient.id,
@@ -93,14 +96,16 @@ class ClientMapper {
                         authenticationMethods.add(
                             resolveClientAuthenticationMethod(authenticationMethod)
                         )
-                    })
+                    }
+                )
             }.authorizationGrantTypes { grantTypes: MutableSet<AuthorizationGrantType?> ->
                 authorizationGrantTypes.forEach(
                     Consumer { grantType: String ->
                         grantTypes.add(
                             resolveAuthorizationGrantType(grantType)
                         )
-                    })
+                    }
+                )
             }.redirectUris { uris: MutableSet<String> ->
                 uris.addAll(
                     redirectUris
@@ -145,7 +150,6 @@ class ClientMapper {
             )
         }
     }
-
 
     private fun parseMap(data: String): Map<String, Any> {
         return try {

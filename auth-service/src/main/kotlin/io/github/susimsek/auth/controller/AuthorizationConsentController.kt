@@ -18,7 +18,8 @@ class AuthorizationConsentController(
 ) {
     @GetMapping(value = ["/oauth2/consent"])
     fun consent(
-        principal: Principal, model: Model,
+        principal: Principal,
+        model: Model,
         @RequestParam(OAuth2ParameterNames.CLIENT_ID) clientId: String,
         @RequestParam(OAuth2ParameterNames.SCOPE) scope: String,
         @RequestParam(OAuth2ParameterNames.STATE) state: String?

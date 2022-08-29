@@ -1,6 +1,5 @@
 package io.github.susimsek.auth.security
 
-
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames
 import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
@@ -9,7 +8,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer
 import java.util.function.Consumer
-
 
 class FederatedIdentityIdTokenCustomizer : OAuth2TokenCustomizer<JwtEncodingContext> {
     override fun customize(context: JwtEncodingContext) {
@@ -29,8 +27,7 @@ class FederatedIdentityIdTokenCustomizer : OAuth2TokenCustomizer<JwtEncodingCont
     }
 
     private fun extractClaims(principal: Authentication): MutableMap<String, Any> {
-        val claims: Map<String, Any>
-        claims = when (principal.principal) {
+        val claims: Map<String, Any> = when (principal.principal) {
             is OidcUser -> {
                 val oidcUser = principal.principal as OidcUser
                 val idToken = oidcUser.idToken

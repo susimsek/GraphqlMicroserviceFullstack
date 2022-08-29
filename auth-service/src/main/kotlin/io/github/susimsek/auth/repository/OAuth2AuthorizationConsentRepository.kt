@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
-interface OAuth2AuthorizationConsentRepository : MongoRepository<AuthorizationConsent, String>,
+interface OAuth2AuthorizationConsentRepository :
+    MongoRepository<AuthorizationConsent, String>,
     QuerydslPredicateExecutor<AuthorizationConsent> {
     fun findByRegisteredClientId(clientId: String): Optional<AuthorizationConsent>
     fun findByRegisteredClientIdAndPrincipalName(registeredClientId: String, principalName: String): Optional<AuthorizationConsent>

@@ -20,12 +20,15 @@ import org.springframework.stereotype.Component
 @ConditionalOnProperty(
     value = ["command.line.runner.enabled"],
     havingValue = "true",
-    matchIfMissing = true)
-internal class DataInitializr(private val oAuth2AuthorityRepository: OAuth2AuthorityRepository,
+    matchIfMissing = true
+)
+internal class DataInitializr(
+    private val oAuth2AuthorityRepository: OAuth2AuthorityRepository,
                               private val oAuth2UserRepository: OAuth2UserRepository,
                               private val passwordEncoder: PasswordEncoder,
                               private val tokenSettings: TokenSettings,
-                              private val registeredClientRepository: RegisteredClientRepository) : CommandLineRunner {
+                              private val registeredClientRepository: RegisteredClientRepository
+) : CommandLineRunner {
 
     override fun run(args: Array<String>) {
         oAuth2AuthorityRepository.deleteAll()
@@ -46,7 +49,7 @@ internal class DataInitializr(private val oAuth2AuthorityRepository: OAuth2Autho
 
         val webClient = RegisteredClient.withId("e4a295f7-0a5f-4cbc-bcd3-d870243d1b04")
             .clientId("web-client")
-            .clientSecret( passwordEncoder.encode("123456"))
+            .clientSecret(passwordEncoder.encode("123456"))
             .redirectUri("https://oidcdebugger.com/debug")
             .redirectUri("http://gqlmsweb.susimsek.github.io/callback")
             .redirectUri("https://gqlmsweb.susimsek.github.io/callback")

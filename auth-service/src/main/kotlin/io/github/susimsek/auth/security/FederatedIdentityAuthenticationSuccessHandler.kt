@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletResponse
 class FederatedIdentityAuthenticationSuccessHandler : AuthenticationSuccessHandler {
     private val delegate: AuthenticationSuccessHandler = SavedRequestAwareAuthenticationSuccessHandler()
     private var oauth2UserHandler = BiConsumer { _: String, _: OAuth2User -> }
-    private var oidcUserHandler = BiConsumer { registrationId: String, user: OidcUser -> oauth2UserHandler.accept(registrationId, user) }
+    private var oidcUserHandler = BiConsumer { registrationId: String, user: OidcUser ->
+                                                   oauth2UserHandler.accept(registrationId, user)
+                                               }
     @Throws(IOException::class, ServletException::class)
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
@@ -24,9 +26,11 @@ class FederatedIdentityAuthenticationSuccessHandler : AuthenticationSuccessHandl
     ) {
         if (authentication is OAuth2AuthenticationToken) {
             if (authentication.principal is OidcUser) {
-                oidcUserHandler.accept(authentication.authorizedClientRegistrationId, authentication.principal as OidcUser)
+                oidcUserHandler.accept(
+                    authentication.authorizedClientRegistrationId, authentication.principal as OidcUser)
             } else if (authentication.principal is OAuth2User) {
-                oauth2UserHandler.accept(authentication.authorizedClientRegistrationId, authentication.principal as OAuth2User)
+                oauth2UserHandler.accept(
+                    authentication.authorizedClientRegistrationId, authentication.principal as OAuth2User)
             }
         }
         delegate.onAuthenticationSuccess(request, response, authentication)

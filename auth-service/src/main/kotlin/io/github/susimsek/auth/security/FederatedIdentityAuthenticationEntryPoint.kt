@@ -21,8 +21,10 @@ class FederatedIdentityAuthenticationEntryPoint(
 
     private val redirectStrategy: RedirectStrategy = DefaultRedirectStrategy()
     private var authorizationRequestUri =
-        (OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
-                + "/{registrationId}")
+        (
+            OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI +
+                "/{registrationId}"
+        )
     private val delegate: AuthenticationEntryPoint
     private val clientRegistrationRepository: ClientRegistrationRepository
 

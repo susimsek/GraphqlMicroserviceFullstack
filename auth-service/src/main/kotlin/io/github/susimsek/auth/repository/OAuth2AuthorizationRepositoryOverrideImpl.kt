@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.security.oauth2.core.OAuth2TokenType
 import java.util.Optional
 
-
 class OAuth2AuthorizationRepositoryOverrideImpl(
     private val mongoTemplate: MongoTemplate
 ) : OAuth2AuthorizationRepositoryOverride {

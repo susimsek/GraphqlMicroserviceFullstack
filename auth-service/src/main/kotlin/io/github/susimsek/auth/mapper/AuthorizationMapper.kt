@@ -32,7 +32,6 @@ class AuthorizationMapper {
         objectMapper.registerModules(OAuth2AuthorizationServerJackson2Module())
     }
 
-
     fun toAuthorization(oAuth2Authorization: OAuth2Authorization): Authorization {
 
         val attributes = writeMap(oAuth2Authorization.attributes)
@@ -48,7 +47,8 @@ class AuthorizationMapper {
             principalName = oAuth2Authorization.principalName,
             authorizationGrantType = oAuth2Authorization.authorizationGrantType.value,
             attributes = attributes,
-            state = state)
+            state = state
+        )
 
         val authorizationCode = oAuth2Authorization.getToken(OAuth2AuthorizationCode::class.java)
         setTokensToAuthorization(authorization, "authorization_code", authorizationCode)
@@ -103,21 +103,23 @@ class AuthorizationMapper {
         }
 
         setTokenToOAuth2AuthorizationBuilder(
-            builder, Token(
-                tokenName =  "authorization_code",
+            builder,
+                Token(
+                tokenName = "authorization_code",
                 tokenValue = authorization.authorizationCodeValue,
                 issuedAt = authorization.authorizationCodeIssuedAt,
-                expiresAt =  authorization.authorizationCodeExpiresAt,
+                expiresAt = authorization.authorizationCodeExpiresAt,
                 metadata = authorization.authorizationCodeMetadata
             )
         )
 
         setTokenToOAuth2AuthorizationBuilder(
-            builder, Token(
-                tokenName =  "access_token",
+            builder,
+                Token(
+                tokenName = "access_token",
                 tokenValue = authorization.accessTokenValue,
                 issuedAt = authorization.accessTokenIssuedAt,
-                expiresAt =  authorization.accessTokenExpiresAt,
+                expiresAt = authorization.accessTokenExpiresAt,
                 metadata = authorization.accessTokenMetadata,
                 tokenType = authorization.accessTokenType,
                 tokenScopes = authorization.accessTokenScopes
@@ -125,21 +127,23 @@ class AuthorizationMapper {
         )
 
         setTokenToOAuth2AuthorizationBuilder(
-            builder, Token(
-                tokenName =  "oidc_token",
+            builder,
+                Token(
+                tokenName = "oidc_token",
                 tokenValue = authorization.oidcIdTokenValue,
                 issuedAt = authorization.oidcIdTokenIssuedAt,
-                expiresAt =  authorization.oidcIdTokenExpiresAt,
+                expiresAt = authorization.oidcIdTokenExpiresAt,
                 metadata = authorization.oidcIdTokenMetadata
             )
         )
 
         setTokenToOAuth2AuthorizationBuilder(
-            builder, Token(
-                tokenName =  "refresh_token",
+            builder,
+                Token(
+                tokenName = "refresh_token",
                 tokenValue = authorization.refreshTokenValue,
                 issuedAt = authorization.refreshTokenIssuedAt,
-                expiresAt =  authorization.refreshTokenExpiresAt,
+                expiresAt = authorization.refreshTokenExpiresAt,
                 metadata = authorization.refreshTokenMetadata
             )
         )
@@ -185,7 +189,7 @@ class AuthorizationMapper {
             metadata = writeMap(token.metadata)
         }
 
-        when(tokenName) {
+        when (tokenName) {
             "authorization_code" -> {
                 authorization.authorizationCodeValue = tokenValue
                 authorization.authorizationCodeIssuedAt = issuedAt
@@ -213,8 +217,8 @@ class AuthorizationMapper {
         }
     }
 
-
-    private fun setTokenToOAuth2AuthorizationBuilder(builder: OAuth2Authorization.Builder,
+    private fun setTokenToOAuth2AuthorizationBuilder(
+        builder: OAuth2Authorization.Builder,
                                                      token: Token
                         ) {
         if (StringUtils.hasText(token.tokenValue)) {
@@ -225,7 +229,7 @@ class AuthorizationMapper {
                 tokenMetadata = parseMap(token.metadata!!)
             }
 
-            val oAuth2Token = when(token.tokenName) {
+            val oAuth2Token = when (token.tokenName) {
                 "authorization_code" -> OAuth2AuthorizationCode(token.tokenValue, tokenIssuedAt, tokenExpiresAt)
                 "access_token" -> {
                     var type: TokenType? = null

@@ -41,14 +41,15 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.RequestMatcher
 import java.security.KeyStore
 
-
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(JWKSetProperties::class, TokenProperties::class)
 class AuthorizationServerConfig(
     private val providerProperties: ProviderProperties
 ) {
 
-    private val CUSTOM_CONSENT_PAGE_URI = "/oauth2/consent"
+    companion object {
+        const val CUSTOM_CONSENT_PAGE_URI = "/oauth2/consent"
+    }
 
     @Bean
     fun passwordEncoder() = BCryptPasswordEncoder()
@@ -74,10 +75,11 @@ class AuthorizationServerConfig(
             .authorizeRequests { authorizeRequests ->
                 authorizeRequests.anyRequest().authenticated()
             }
-            .csrf{csrf -> csrf.ignoringRequestMatchers(endpointsMatcher)}
+            .csrf { csrf -> csrf.ignoringRequestMatchers(endpointsMatcher) }
             .exceptionHandling { exceptions ->
-                exceptions.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login")) }
-            .oauth2ResourceServer{it.jwt()}
+                exceptions.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
+            }
+            .oauth2ResourceServer { it.jwt() }
             .apply(authorizationServerConfigurer)
 
         http.apply(FederatedIdentityConfigurer())
@@ -85,36 +87,44 @@ class AuthorizationServerConfig(
         return http.build()
     }
 
-
     @Bean
     fun idTokenCustomizer(): OAuth2TokenCustomizer<JwtEncodingContext> {
         return FederatedIdentityIdTokenCustomizer()
     }
 
     @Bean
-    fun registeredClientRepository(oauth2RegisteredClientRepository: OAuth2RegisteredClientRepository,
-                                   registeredClientMapper: ClientMapper): RegisteredClientRepository {
+    fun registeredClientRepository(
+        oauth2RegisteredClientRepository: OAuth2RegisteredClientRepository,
+                                   registeredClientMapper: ClientMapper
+    ): RegisteredClientRepository {
        return MongodbRegisteredClientService(oauth2RegisteredClientRepository, registeredClientMapper)
     }
 
     @Bean
-    fun oAuth2AuthorizationService(registeredClientRepository: RegisteredClientRepository,
+    fun oAuth2AuthorizationService(
+        registeredClientRepository: RegisteredClientRepository,
                                    oAuth2AuthorizationRepository: OAuth2AuthorizationRepository,
                                    authorizationMapper: AuthorizationMapper
     ): OAuth2AuthorizationService {
-        return MongodbOAuth2AuthorizationService(registeredClientRepository, oAuth2AuthorizationRepository, authorizationMapper)
+        return MongodbOAuth2AuthorizationService(
+            registeredClientRepository, oAuth2AuthorizationRepository, authorizationMapper
+        )
     }
 
     @Bean
-    fun oAuth2AuthorizationConsentService(registeredClientRepository: RegisteredClientRepository,
+    fun oAuth2AuthorizationConsentService(
+        registeredClientRepository: RegisteredClientRepository,
                                           oAuth2AuthorizationConsentRepository: OAuth2AuthorizationConsentRepository,
                                           authorizationConsentMapper: AuthorizationConsentMapper
     ): OAuth2AuthorizationConsentService {
-        return MongodbOAuth2AuthorizationConsentService(registeredClientRepository, oAuth2AuthorizationConsentRepository, authorizationConsentMapper)
+        return MongodbOAuth2AuthorizationConsentService(
+            registeredClientRepository, oAuth2AuthorizationConsentRepository, authorizationConsentMapper
+        )
     }
 
     @Bean
-    fun userDetailsService(oAuth2UserRepository: OAuth2UserRepository
+    fun userDetailsService(
+        oAuth2UserRepository: OAuth2UserRepository
     ): UserDetailsService {
        return MongodbUserDetailsService(oAuth2UserRepository)
     }
@@ -144,7 +154,6 @@ class AuthorizationServerConfig(
             .refreshTokenTimeToLive(tokenProperties.refreshTokenTimeToLive)
             .build()
     }
-
 
     private fun buildJWKSet(jwkSetProperties: JWKSetProperties): JWKSet {
         return try {

@@ -35,7 +35,10 @@ class MongodbOAuth2AuthorizationService(
         Assert.hasText(id, "id cannot be empty")
         val entity = oauth2AuthorizationRepository.findById(id).orElse(null) ?: return null
         val registeredClient = registeredClientRepository.findById(entity.registeredClientId)
-            ?: throw DataRetrievalFailureException("The RegisteredClient with id '${entity.registeredClientId}' was not found in the RegisteredClientRepository.")
+            ?: throw DataRetrievalFailureException(
+                "The RegisteredClient with id '${entity.registeredClientId}' " +
+                    "was not found in the RegisteredClientRepository."
+            )
         return authorizationMapper.toOAuth2Authorization(registeredClient, entity)
     }
 
@@ -43,10 +46,12 @@ class MongodbOAuth2AuthorizationService(
         Assert.hasText(token, "token cannot be empty")
         val entity = oauth2AuthorizationRepository.findByToken(token, tokenType).orElse(null) ?: return null
         val registeredClient = registeredClientRepository.findById(entity.registeredClientId)
-            ?: throw DataRetrievalFailureException("The RegisteredClient with id '${entity.registeredClientId}' was not found in the RegisteredClientRepository.")
+            ?: throw DataRetrievalFailureException(
+                "The RegisteredClient with id '${entity.registeredClientId}' " +
+                    "was not found in the RegisteredClientRepository."
+            )
         return authorizationMapper.toOAuth2Authorization(registeredClient, entity)
     }
-
 
     private fun insertAuthorization(oAuth2Authorization: OAuth2Authorization) {
         val authorization = authorizationMapper.toAuthorization(oAuth2Authorization)
@@ -79,6 +84,5 @@ class MongodbOAuth2AuthorizationService(
         existingAuthorization.refreshTokenExpiresAt = authorization.refreshTokenExpiresAt
         existingAuthorization.refreshTokenMetadata = authorization.refreshTokenMetadata
         oauth2AuthorizationRepository.save(existingAuthorization)
-
     }
 }

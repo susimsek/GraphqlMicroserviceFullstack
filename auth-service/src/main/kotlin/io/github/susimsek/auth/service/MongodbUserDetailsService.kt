@@ -12,13 +12,15 @@ class MongodbUserDetailsService(
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
         return userRepository.findByUsername(username)
-            .map { createSpringSecurityUser( it) }
+            .map { createSpringSecurityUser(it) }
             .orElseThrow { UsernameNotFoundException(username) }
     }
 
     private fun createSpringSecurityUser(user: User): org.springframework.security.core.userdetails.User {
         val authorities = user.authorities.map { SimpleGrantedAuthority(it.name) }.toMutableSet()
-        return org.springframework.security.core.userdetails.User(user.id, user.password, user.enabled,
-            !user.accountExpired, !user.credentialsExpired, !user.accountLocked, authorities)
+        return org.springframework.security.core.userdetails.User(
+            user.id, user.password, user.enabled,
+            !user.accountExpired, !user.credentialsExpired, !user.accountLocked, authorities
+        )
     }
 }

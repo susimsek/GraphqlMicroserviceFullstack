@@ -15,7 +15,6 @@ import java.time.ZoneId
 import java.util.Date
 import java.util.Optional
 
-
 @Configuration(proxyBeanMethods = false)
 @EnableMongoRepositories("io.github.susimsek.auth.repository")
 @Import(value = [MongoAutoConfiguration::class])

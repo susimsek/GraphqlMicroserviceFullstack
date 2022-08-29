@@ -11,14 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.web.SecurityFilterChain
 
-
 @EnableWebSecurity
 @EnableConfigurationProperties(CorsProperties::class)
 class DefaultSecurityConfig(
     private val securityMatcherProperties: SecurityMatcherProperties,
     private val userRepositoryOAuth2UserHandler: UserRepositoryOAuth2UserHandler
 ) {
-
 
     @Bean
     @Throws(Exception::class)
@@ -31,11 +29,12 @@ class DefaultSecurityConfig(
                     .antMatchers(*securityMatcherProperties.permitAllPatterns.toTypedArray()).permitAll()
                     .anyRequest().authenticated()
             }
-            .formLogin{
-                formLogin -> formLogin.loginPage("/login").permitAll()
+            .formLogin {
+                formLogin ->
+                    formLogin.loginPage("/login").permitAll()
             }
             .apply(federatedIdentityConfigurer)
-        return http.build();
+        return http.build()
     }
 
     @Bean

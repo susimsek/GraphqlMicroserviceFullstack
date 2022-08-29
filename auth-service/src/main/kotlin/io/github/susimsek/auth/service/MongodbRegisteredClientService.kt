@@ -12,7 +12,6 @@ class MongodbRegisteredClientService(
     private val registeredClientMapper: ClientMapper
 ) : RegisteredClientRepository {
 
-
     override fun save(registeredClient: RegisteredClient) {
         Assert.notNull(registeredClient, "registeredClient cannot be null")
         val existingRegisteredClient = oauth2RegisteredClientRepository.findById(registeredClient.id).orElse(null)

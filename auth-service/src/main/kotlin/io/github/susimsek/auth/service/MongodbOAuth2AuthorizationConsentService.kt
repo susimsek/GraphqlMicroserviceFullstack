@@ -27,14 +27,16 @@ class MongodbOAuth2AuthorizationConsentService(
     override fun remove(authorizationConsent: OAuth2AuthorizationConsent) {
         Assert.notNull(authorizationConsent, "authorizationConsent cannot be null")
         oAuth2AuthorizationConsentRepository.deleteByRegisteredClientIdAndPrincipalName(
-            authorizationConsent.registeredClientId, authorizationConsent.principalName)
+            authorizationConsent.registeredClientId, authorizationConsent.principalName
+        )
     }
 
     override fun findById(registeredClientId: String, principalName: String): OAuth2AuthorizationConsent? {
         Assert.hasText(registeredClientId, "registeredClientId cannot be empty")
         Assert.hasText(principalName, "principalName cannot be empty")
         val entity = oAuth2AuthorizationConsentRepository.findByRegisteredClientIdAndPrincipalName(
-            registeredClientId, principalName).orElse(null) ?: return null
+            registeredClientId, principalName
+        ).orElse(null) ?: return null
         val registeredClient = registeredClientRepository.findById(entity.registeredClientId)
             ?: throw DataRetrievalFailureException("The RegisteredClient with id '${entity.registeredClientId}' was not found in the RegisteredClientRepository.")
         return authorizationConsentMapper.toOAuth2AuthorizationConsent(registeredClient, entity)
@@ -45,7 +47,10 @@ class MongodbOAuth2AuthorizationConsentService(
         oAuth2AuthorizationConsentRepository.save(authorizationConsent)
     }
 
-    private fun updateAuthorizationConsent(existingAuthorizationConsent: AuthorizationConsent, oAuth2AuthorizationConsent: OAuth2AuthorizationConsent) {
+    private fun updateAuthorizationConsent(
+        existingAuthorizationConsent: AuthorizationConsent,
+        oAuth2AuthorizationConsent: OAuth2AuthorizationConsent
+    ) {
         val authorizationConsent = authorizationConsentMapper.toAuthorizationConsent(oAuth2AuthorizationConsent)
         existingAuthorizationConsent.authorities = authorizationConsent.authorities
         oAuth2AuthorizationConsentRepository.save(existingAuthorizationConsent)

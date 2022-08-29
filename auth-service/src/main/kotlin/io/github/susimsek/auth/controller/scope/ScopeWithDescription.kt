@@ -1,6 +1,6 @@
 package io.github.susimsek.auth.controller.scope
 
-data class ScopeWithDescription (val scope: String) {
+data class ScopeWithDescription(val scope: String) {
         val description: String = scopeDescriptions.getOrDefault(scope, DEFAULT_DESCRIPTION)
 
         companion object {

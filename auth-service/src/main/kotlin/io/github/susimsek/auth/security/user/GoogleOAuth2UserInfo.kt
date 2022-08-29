@@ -1,7 +1,5 @@
 package io.github.susimsek.auth.security.user
 
-import io.github.susimsek.auth.security.user.OAuth2UserInfo
-
 class GoogleOAuth2UserInfo(attributes: Map<String, Any?>) : OAuth2UserInfo(attributes) {
     override val id: String?
         get() = attributes["sub"] as String?

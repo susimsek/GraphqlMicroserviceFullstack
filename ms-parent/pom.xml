@@ -58,6 +58,11 @@
 		<jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
 		<sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
 		<properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
+		<maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
+		<detekt.version>1.19.0</detekt.version>
+		<detekt.configFile>${project.basedir}/detekt-config.yml</detekt.configFile>
+		<detekt.xmlReportFile>${project.build.directory}/detekt-reports/detekt.xml</detekt.xmlReportFile>
+		<sonar.kotlin.detekt.reportPaths>${detekt.xmlReportFile}</sonar.kotlin.detekt.reportPaths>
 		<docker.image.name/>
 	</properties>
 
@@ -368,6 +373,46 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>${maven-antrun-plugin.version}</version>
+					<executions>
+						<execution>
+							<!-- This can be run separately with mvn antrun:run@detekt -->
+							<id>detekt</id>
+							<phase>verify</phase>
+							<configuration>
+								<target name="detekt">
+									<!-- See https://arturbosch.github.io/detekt/cli.html for more options-->
+									<java taskname="detekt" dir="${basedir}"
+										  fork="true"
+										  failonerror="true"
+										  classname="io.gitlab.arturbosch.detekt.cli.Main"
+										  classpathref="maven.plugin.classpath">
+										<arg value="--input"/>
+										<arg value="${project.basedir}/src/main/kotlin"/>
+										<arg value="--report"/>
+										<arg value="xml:${detekt.xmlReportFile}"/>
+										<arg value="--config"/>
+										<arg value="${detekt.configFile}"/>
+									</java>
+								</target>
+							</configuration>
+							<goals>
+								<goal>run</goal>
+							</goals>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>io.gitlab.arturbosch.detekt</groupId>
+							<artifactId>detekt-cli</artifactId>
+							<version>${detekt.version}</version>
+						</dependency>
+						<!-- additional 3rd party ruleset(s) can be specified here -->
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -40,7 +40,7 @@ class ReactiveRedisCacheManager<T>(
         val update = reactiveHashOperations.putAll(key, map)
             .map { map }
         val setTtl = redisOperations.expire(key, expiration)
-        return update.then(setTtl).flatMap{update}
+        return update.then(setTtl).flatMap { update }
     }
 
     override fun get(key: String, hashKey: String): Mono<T> {

@@ -10,7 +10,9 @@ data class LoggingProperties(
     var logstash: Logstash = Logstash(false, "localhost", 5000, 512)
 )
 
-data class Logstash(var enabled: Boolean,
+data class Logstash(
+    var enabled: Boolean,
                     var host: String,
                     var port: Int,
-                    var ringBufferSize: Int)
+                    var ringBufferSize: Int
+)

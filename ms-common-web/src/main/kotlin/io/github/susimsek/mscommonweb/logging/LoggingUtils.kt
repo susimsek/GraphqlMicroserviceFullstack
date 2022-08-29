@@ -53,7 +53,8 @@ object LoggingUtils {
     }
 
     fun addLogstashTcpSocketAppender(
-        context: LoggerContext, customFields: String,
+        context: LoggerContext,
+        customFields: String,
         logstash: Logstash
     ) {
         log.info("Initializing Logstash loggingProperties")

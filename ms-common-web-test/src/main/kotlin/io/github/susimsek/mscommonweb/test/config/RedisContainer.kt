@@ -1,6 +1,5 @@
 package io.github.susimsek.mscommonweb.test.config
 
-import io.github.susimsek.mscommonweb.test.config.RedisContainer
 import org.slf4j.LoggerFactory
 import org.springframework.lang.NonNull
 import org.testcontainers.containers.GenericContainer

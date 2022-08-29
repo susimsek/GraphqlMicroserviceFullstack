@@ -1,7 +1,5 @@
 package io.github.susimsek.mscommonweb.test
 
-
-
 import io.github.susimsek.mscommonweb.test.config.EmbeddedMongo
 import io.github.susimsek.mscommonweb.test.config.EmbeddedRedis
 import io.github.susimsek.mscommonweb.test.config.TestSecurityConfig

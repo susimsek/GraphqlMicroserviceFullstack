@@ -7,7 +7,7 @@ const {initConfig} = require("./config");
 const {initConsul, registerService, getServiceList, unregisterService} = require("./consul");
 
 initConfig().then(config => {
-    if (process.env.NODE_ENV !== 'development') {
+    if (config.CONSUL_ENABLED === 'true') {
         initConsul(config)
     }
 
@@ -27,7 +27,7 @@ initConfig().then(config => {
     } else {
         console.log('Starting Apollo Gateway in managed mode ...');
     }
-    startGateway(config, apolloGatewayConfig)
+    startGateway(config, apolloGatewayConfig, config.CONSUL_ENABLED)
 }).catch(err => {
     console.log(err);
 });
@@ -38,7 +38,7 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
     }
 }
 
-const startGateway = (config, apolloGatewayConfig) => {
+const startGateway = (config, apolloGatewayConfig, consulEnabled) => {
     const corsOptions = {
         origin: config.CORS_ALLOWED_ORIGINS.split(", "),
         credentials: config.CORS_ALLOW_CREDENTIALS
@@ -58,12 +58,12 @@ const startGateway = (config, apolloGatewayConfig) => {
         plugins: [
             {
                 async serverWillStart() {
-                    if (process.env.NODE_ENV !== 'development') {
+                    if (consulEnabled === 'true') {
                         registerService(config)
                     }
                     return {
                         async serverWillStop() {
-                            if (process.env.NODE_ENV !== 'development') {
+                            if (consulEnabled === 'true') {
                                 await unregisterService()
                             }
                         }

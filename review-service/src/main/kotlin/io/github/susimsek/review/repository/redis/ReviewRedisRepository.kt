@@ -6,24 +6,24 @@ import org.springframework.stereotype.Repository
 import reactor.core.publisher.Mono
 
 @Repository
-class ReviewRedisRepository: AbstractReactiveRedisRepository<MutableMap<String, Review>>() {
+class ReviewRedisRepository : AbstractReactiveRedisRepository<MutableMap<String, Review>>() {
     override fun getKey(): String {
         return "productReview"
     }
 
     fun saveReview(review: Review): Mono<Review> {
         val cacheResult = findById(review.productId.hashCode().toString())
-        return cacheResult.hasElement().flatMap {exists ->
+        return cacheResult.hasElement().flatMap { exists ->
             when (exists) {
                 false -> addReview(review)
-                true -> cacheResult.flatMap{updateReview(review, it)}
+                true -> cacheResult.flatMap { updateReview(review, it) }
             }
         }
     }
 
     private fun addReview(review: Review): Mono<Review> {
         return save(review.productId.hashCode().toString(), hashMapOf(review.id to review))
-            .map{ review }
+            .map { review }
     }
 
     private fun updateReview(review: Review, map: MutableMap<String, Review>): Mono<Review> {
@@ -36,6 +36,6 @@ class ReviewRedisRepository: AbstractReactiveRedisRepository<MutableMap<String, 
             }
         }
         return save(review.productId.hashCode().toString(), map)
-            .map{ review }
+            .map { review }
     }
 }

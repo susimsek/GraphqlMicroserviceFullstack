@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-
 @Service
 class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository
-    ): ReviewService {
-
+    ) : ReviewService {
 
     override fun getReviewsByProductIdsIn(productIds: MutableList<String?>): Flux<Review> {
         return when (productIds.size) {

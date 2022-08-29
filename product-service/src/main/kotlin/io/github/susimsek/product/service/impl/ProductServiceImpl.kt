@@ -8,11 +8,10 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-
 @Service
 class ProductServiceImpl(
     private val productRepository: ProductRepository
-    ): ProductService {
+    ) : ProductService {
 
     override fun getProduct(id: String): Mono<Product> {
         return productRepository.findById(id)

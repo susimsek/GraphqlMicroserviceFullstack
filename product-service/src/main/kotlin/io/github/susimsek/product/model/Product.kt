@@ -14,7 +14,7 @@ data class Product(
     var id: String = UUID.randomUUID().toString(),
     var name: String? = null,
     var description: String? = null
-): AbstractAuditingEntity(), Serializable {
+) : AbstractAuditingEntity(), Serializable {
     companion object {
         private const val serialVersionUID = 1L
     }

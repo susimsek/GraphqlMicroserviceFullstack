@@ -53,6 +53,5 @@ class GraphqlConfig {
                     .build()
             }
         }
-
     }
 }

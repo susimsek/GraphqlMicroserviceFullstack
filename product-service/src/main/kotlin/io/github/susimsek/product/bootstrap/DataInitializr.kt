@@ -11,7 +11,8 @@ import reactor.core.publisher.Flux
 @ConditionalOnProperty(
     value = ["command.line.runner.enabled"],
     havingValue = "true",
-    matchIfMissing = true)
+    matchIfMissing = true
+)
 internal class DataInitializr(private val productService: ProductService) : CommandLineRunner {
 
     override fun run(args: Array<String>) {

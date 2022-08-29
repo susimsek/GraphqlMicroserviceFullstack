@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-
 @Service
 @Primary
 class CachedProductService(
@@ -20,15 +19,17 @@ class CachedProductService(
     override fun getProduct(id: String): Mono<Product> {
         val cacheResult = productRedisRepository.findById(id)
         return cacheResult.hasElement()
-            .flatMap { when (it) {
+            .flatMap {
+                when (it) {
                 true -> cacheResult
                 else -> getFromDatabase(id)
-            } }
+            }
+            }
     }
 
     override fun saveProduct(product: Product): Mono<Product> {
         return productService.saveProduct(product)
-            .flatMap{productRedisRepository.save(it.id, it)}
+            .flatMap { productRedisRepository.save(it.id, it) }
     }
 
     override fun deleteAllProducts(): Mono<Boolean> {
@@ -39,15 +40,17 @@ class CachedProductService(
     override fun getAllProducts(): Flux<Product> {
         val cacheResult = productRedisRepository.findAll()
         return cacheResult.hasElements()
-            .flatMapMany { when (it) {
+            .flatMapMany {
+                when (it) {
                 true -> cacheResult
                 else -> getAllFromDatabase()
-            } }
+            }
+            }
     }
 
     private fun getFromDatabase(id: String): Mono<Product> {
         return productService.getProduct(id)
-            .flatMap{productRedisRepository.save(it.id, it)}
+            .flatMap { productRedisRepository.save(it.id, it) }
     }
 
     private fun getAllFromDatabase(): Flux<Product> {

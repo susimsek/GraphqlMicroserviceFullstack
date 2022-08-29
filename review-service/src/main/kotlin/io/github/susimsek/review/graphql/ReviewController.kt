@@ -14,7 +14,7 @@ class ReviewController(
 
     @BatchMapping
     fun reviews(products: MutableList<Product>): Mono<Map<Product, List<Review>>> {
-        val productIds = products.map {it.id}.toMutableList()
+        val productIds = products.map { it.id }.toMutableList()
         val result = reviewService.getReviewsByProductIdsIn(productIds)
         return result
             .collectMultimap { it.productId }

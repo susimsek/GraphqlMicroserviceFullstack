@@ -1,6 +1,5 @@
 package io.github.susimsek.review.service.cache
 
-
 import io.github.susimsek.review.model.Review
 import io.github.susimsek.review.repository.redis.ReviewRedisRepository
 import io.github.susimsek.review.service.ReviewService
@@ -9,7 +8,6 @@ import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-
 
 @Service
 @Primary
@@ -27,7 +25,7 @@ class CachedReviewService(
         return cacheResult.hasElement()
             .flatMapMany {
                 when (it) {
-                    true -> cacheResult.flatMapIterable {map -> map.values }
+                    true -> cacheResult.flatMapIterable { map -> map.values }
                     else -> getAllFromDatabase(productIds)
                 }
             }
@@ -41,7 +39,7 @@ class CachedReviewService(
     override fun saveAllReviews(reviews: MutableList<Review>): Flux<Review> {
         return reviewService.saveAllReviews(reviews)
             .collectMultimap { it.productId.hashCode().toString() }
-            .map {it.mapValues { reviewMap -> reviewMap.value.associateBy { review -> review.id }.toMutableMap() } }
+            .map { it.mapValues { reviewMap -> reviewMap.value.associateBy { review -> review.id }.toMutableMap() } }
             .flatMap(reviewRedisRepository::saveAll)
             .flatMapIterable { reviews }
     }
@@ -59,7 +57,8 @@ class CachedReviewService(
         }
         return reviewService.getReviewsByProductIdsIn(productIds)
             .collectMap(Review::productId)
-            .flatMapMany{ map -> reviewRedisRepository.save(hashKey, map)
+            .flatMapMany { map ->
+                reviewRedisRepository.save(hashKey, map)
                 .flatMapIterable { it.values }
             }
     }

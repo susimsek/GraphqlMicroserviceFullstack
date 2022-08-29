@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component
 @ConditionalOnProperty(
     value = ["command.line.runner.enabled"],
     havingValue = "true",
-    matchIfMissing = true)
+    matchIfMissing = true
+)
 internal class DataInitializr(private val reviewService: ReviewService) : CommandLineRunner {
 
     private val reviews = mutableListOf(

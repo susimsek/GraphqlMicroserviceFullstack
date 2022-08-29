@@ -15,7 +15,7 @@ data class Review(
     var productId: String,
     var text: String? = null,
     var starRating: Int? = null,
-): AbstractAuditingEntity(), Serializable {
+) : AbstractAuditingEntity(), Serializable {
 
     companion object {
         private const val serialVersionUID = 1L

@@ -75,19 +75,6 @@ You can run the spring boot microservice by typing the following command
 mvn spring-boot:run
 ```
 
-# Supergraph Composition
-
-## Prerequisites
-
-* Rover
-
-You can federate multiple subgraphs into a supergraph by typing the following command
-
-```sh
-rover supergraph compose --config ./deploy/supergraph.yaml > ./deploy/supergraph.graphql
-```
-
-
 ### Run the apollo gateway
 
 You can install the dependencies by typing the following command
@@ -118,6 +105,18 @@ You can run the react app(accessible on http://127.0.0.1:3000) by typing the fol
 
 ```sh
 npm start
+```
+
+# Supergraph Composition
+
+## Prerequisites
+
+* Rover
+
+You can federate multiple subgraphs into a supergraph by typing the following command
+
+```sh
+rover supergraph compose --config ./deploy/supergraph.yaml > ./deploy/supergraph.graphql
 ```
 
 # Sonar

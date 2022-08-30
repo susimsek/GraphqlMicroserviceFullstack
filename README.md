@@ -75,7 +75,7 @@ You can run the spring boot microservice by typing the following command
 mvn spring-boot:run
 ```
 
-### Supergraph Composition
+# Supergraph Composition
 
 ## Prerequisites
 

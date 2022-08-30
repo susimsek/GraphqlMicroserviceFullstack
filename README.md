@@ -146,7 +146,7 @@ You can test code quality locally via sonarqube by typing the following command
 npm run sonar
 ```
 
-## Detekt
+# Detekt
 
 Detekt a static code analysis tool for the Kotlin programming language  
 
@@ -156,7 +156,7 @@ You can run detekt by typing the following command
 mvn antrun:run@detekt
 ```
 
-## Caching
+# Caching
 
 Redis is an Open Source, in-memory data structure store that can be used as a performant caching solution Depending on your configuration, you can choose to use Redis as a single server node or as a distributed cache   
 

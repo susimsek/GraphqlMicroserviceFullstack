@@ -45,7 +45,7 @@ const initConfig = async () => {
         CORS_ALLOWED_ORIGINS: config.CORS_ALLOWED_ORIGINS || 'http://localhost:3000, http://127.0.0.1:3000, https://studio.apollographql.com',
         CORS_ALLOW_CREDENTIALS: process.env.CORS_ALLOW_CREDENTIALS || true,
         ACL_TOKEN: config.CONSUL_ACL_TOKEN || '',
-        CONSUL_ENABLED: process.env.CONSUL_ENABLED || false,
+        CONSUL_ENABLED: config.CONSUL_ENABLED || false,
         CONSUL_HOST: config.CONSUL_HOST || 'localhost',
         CONSUL_PORT: config.CONSUL_PORT || 8500
     };

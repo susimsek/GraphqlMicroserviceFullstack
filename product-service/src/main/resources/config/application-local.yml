@@ -7,6 +7,9 @@ spring:
       enabled: false
     consul:
       enabled: false
+  graphql:
+    graphiql:
+      enabled: true
   data:
     mongodb:
       uri: mongodb+srv://test_user123456:4hRsOKoJxkHswunQ@cluster0.nbzfi.mongodb.net/demo
